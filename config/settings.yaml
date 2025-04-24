@@ -1,0 +1,3 @@
+base_url: "https://bookslot-staging.centerforvein.com/?istestrecord=1"
+browser: "chrome"
+timeout: 10
