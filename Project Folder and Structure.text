@@ -1,0 +1,72 @@
+🔍 Project Overview
+
+Purpose:
+An end-to-end (E2E) testing framework designed for various domains like Banking, Healthcare, and E-Commerce.
+
+Tech Stack:
+
+    Automation Tool: Selenium
+
+    Test Runner: Pytest
+
+    Reporting: Allure
+
+    Languages: Python
+
+    Others: Integration with APIs and Databases
+
+📁 Project Structure
+
+The repository is well-organized with a clear separation of concerns. Here's a breakdown of the main directories and files:
+
+    ai_mapping/: Potentially for AI-related mappings or configurations.
+
+    allure-report/ & allure-results/: Directories for Allure reports and results.
+
+    api_utils/: Utilities for API interactions.
+
+    config/: Configuration files, possibly including environment settings.
+
+    data/test_inputs/: Test data inputs.
+
+    db_utils/: Database utility functions.
+
+    drivers/: WebDriver executables or related configurations.
+
+    features/: Feature files, possibly for BDD scenarios.
+
+    fixtures/: Pytest fixtures for setup and teardown operations.
+
+    pages/: Page Object Model (POM) classes representing web pages.
+
+    reports/allure-results/: Allure results for generating reports.
+
+    resources/: Additional resources required for tests.
+
+    screenshots/: Captured screenshots during test execution.
+
+    scripts/: Scripts for various utilities or test executions.
+
+    selenium_utils/: Selenium-specific utility functions.
+
+    tests/: Test cases organized per functionality.
+
+    utils/: General utility functions.
+
+    .env & .env.local: Environment variable definitions.
+
+    API-Database-UI.docx: Documentation outlining the integration between API, Database, and UI.
+
+    Project-Structure.txt: Textual representation of the project structure.
+
+    README.md: Project overview and instructions.
+
+    automation.log: Log file capturing automation execution details.
+
+    project-structure-creation-script.py: Script to generate the project structure.
+
+    pytest.ini: Pytest configuration file.
+
+    requirements.txt: Python dependencies.
+
+    run_tests.bat & run_tests.sh: Scripts to execute tests on Windows and Unix-based systems respectively.

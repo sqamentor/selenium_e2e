@@ -16,3 +16,7 @@ pyyaml
 fuzzywuzzy
 python-Levenshtein
 faker
+coverage
+pytest-rerunfailures
+flake8 
+black
