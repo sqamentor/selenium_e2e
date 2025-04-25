@@ -31,6 +31,7 @@ from selenium.common.exceptions import (
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
 
+
 # 👇 Go up 3 levels from TestScript.py to reach AutomationUtilities
 
 
@@ -76,8 +77,8 @@ logging.info(f"[OK]-[LOGGING] Writing logs to: {LOG_FILE_PATH}")
 # ------------------------------------------------------------------------------------------------------------
 # UI Component: Book Slot Page (Center for Vein Restoration)
 logging.info("🚀 Starting UI interaction with Book Slot page...")
-target = "https://bookslot-staging.centerforvein.com/?istestrecord=1"
-driver = run_chrome_automation(target_url=target)
+target_url = os.getenv("TARGET_URL")
+driver = run_chrome_automation(target_url)
 driver = run_chrome_automation()
 finder = ElementFinder(driver)
 

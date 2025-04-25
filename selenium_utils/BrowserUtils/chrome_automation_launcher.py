@@ -7,6 +7,7 @@ project_root = os.path.abspath(os.path.join(current_file_path, "../../.."))
 
 if project_root not in sys.path:
     sys.path.insert(0, project_root)
+
 import requests
 import zipfile
 import time
@@ -23,7 +24,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-#from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException
 from dotenv import load_dotenv
 import re
 import pathlib
@@ -57,6 +58,8 @@ load_dotenv()
 ENABLE_AI = os.getenv("ENABLE_AI", "False").lower() == "true"
 DRIVERS_DIR = "./drivers"
 HEADLESS = False
+target_url = os.getenv("TARGET_URL")
+print(f"This is target URL Confirmation from local .Env: {target_url}")
 
 
 def is_valid_url(url):
@@ -306,7 +309,8 @@ def did_page_fail_to_load(driver):
         return False
 
 # ------------------------- Reusable Function -------------------------
-def run_chrome_automation(target_url: str = None):
+#def run_chrome_automation(target_url: str = None):
+def run_chrome_automation(target_url):
 
     if not target_url:
         raise ValueError("❌ Target URL must be provided.")
