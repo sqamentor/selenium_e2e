@@ -7,6 +7,9 @@ from utils.path_initializer import ensure_project_root_in_sys_path
 import pytest
 import os
 import allure
+import pytest
+from selenium_utils.BrowserUtils.chrome_automation_launcher import run_chrome_automation
+
 
 # ✅ Ensure project root is always in sys.path
 ensure_project_root_in_sys_path(relative_levels_up=1, print_debug=False)
@@ -61,3 +64,10 @@ def pytest_runtest_makereport(item, call):
             name="Failure Screenshot",
             attachment_type=allure.attachment_type.PNG
         )
+
+
+@pytest.fixture(scope="function")
+def driver():
+    driver = run_chrome_automation()
+    yield driver
+    driver.quit()
