@@ -31,6 +31,9 @@ from utils.human_actions import simulate_typing, human_scroll, random_mouse_move
 # ✅ Browser Launcher
 from selenium_utils.BrowserUtils.chrome_automation_launcher import run_chrome_automation
 
+# ✅ Global Smart Loader Wait
+from selenium_utils.BrowserUtils.loader_utils import wait_for_loader_to_disappear
+
 # ------------------------- Setup Logging ------------------------------------------------------------------------------------------------
 BASE_DIR = pathlib.Path(__file__).parent.resolve()
 LOG_FILE_PATH = os.path.join(BASE_DIR, "Bookslot_info_otp_page_ai.log")
@@ -74,6 +77,7 @@ try:
     interact_by_label(driver, label="Text", field_type="click")
     interact_by_label(driver, label="Send Me The Code", field_type="click")
     # Correct OTP Input
+    wait_for_loader_to_disappear(driver)
     interact_by_label(driver, label="Code", field_type="textbox", value="123456")
     # Then explicitly click the button
     interact_by_label(driver, label="Verify Code", field_type="click")

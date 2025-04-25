@@ -57,5 +57,5 @@ def interact_by_label(driver, label, field_type, value=None):
         "selector": sel,
         "action": field_type,
         "value_entered": value,
-        "source": "AI Ranker"
+        "source": "AI Ranker or Fallback"
     }
