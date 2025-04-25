@@ -34,7 +34,7 @@ from selenium_utils.BrowserUtils.browser_ai_utils import (
     analyze_screenshot_with_gpt,
     verify_page_with_ai
 )
-
+from dotenv import load_dotenv
 # ------------------------- Setup Logging -------------------------
 # ✅ Step 1: Define the directory and log file path
 BASE_DIR = pathlib.Path(__file__).parent.resolve()
@@ -406,7 +406,6 @@ def run_chrome_automation(target_url):
         # ✅ Add this here!
         
         return driver
-        #time.sleep(6)
 
     except Exception as e:
         if ENABLE_AI:
@@ -416,7 +415,6 @@ def run_chrome_automation(target_url):
 #    finally:
 #        logging.info("[OK] Cleaning up resources...")
 #        if 'driver' in locals():
-#            time.sleep(6)
 #            driver.quit()
 #        if os.path.exists(temp_profile):
 #            shutil.rmtree(temp_profile, ignore_errors=True)

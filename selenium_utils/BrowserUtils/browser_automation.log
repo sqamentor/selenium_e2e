@@ -1,1 +1,4 @@
-[2025-04-25 07:07:21,124] [INFO] [OK]-[LOGGING] Writing logs to: C:\Users\LokendraSingh\selenium_e2e\selenium_utils\BrowserUtils\browser_automation.log
+[2025-04-25 07:14:27,233] [INFO] [OK]-[LOGGING] Writing logs to: C:\Users\LokendraSingh\selenium_e2e\selenium_utils\BrowserUtils\browser_automation.log
+[2025-04-25 07:14:27,238] [INFO] [OK]-[LOGGING] Writing logs to: C:\Users\LokendraSingh\selenium_e2e\selenium_utils\elementFinderUtils\TestScript-ElementFinder.log
+[2025-04-25 07:14:27,239] [INFO] [OK]-[LOGGING] Writing logs to: C:\Users\LokendraSingh\selenium_e2e\pages\Bookslot_info_otp_page.log
+[2025-04-25 07:14:27,240] [INFO] 🚀 Starting UI interaction with Book Slot page...

@@ -85,7 +85,7 @@ class ElementFinder:
     def highlight(self, element):
         try:
             self.driver.execute_script(
-                "arguments[0].style.border='3px solid red'; arguments[0].scrollIntoView(true);", element
+                "arguments[0].style.border='1px solid red'; arguments[0].scrollIntoView(true);", element
             )
         except Exception as e:
             logging.warning(f"⚠️ Unable to highlight element: {e}")
@@ -140,5 +140,11 @@ class ElementFinder:
             logging.error(f"❌ Failed to find elements: ({by}, {locator}) - {e}")
             return []
 
-
-
+    def find_clickable(self, locator, timeout=15):
+        try:
+            return WebDriverWait(self.driver, timeout).until(
+                EC.element_to_be_clickable(locator))
+        except TimeoutException:
+            self.logger.error(f"❌ Clickable element not found: {locator}")
+            self.driver.save_screenshot("screenshots/element_not_clickable.png")
+            raise

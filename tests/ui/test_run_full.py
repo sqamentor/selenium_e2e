@@ -8,7 +8,7 @@ if project_root not in sys.path:
 from selenium_utils.BrowserUtils.chrome_automation_launcher import run_chrome_automation
 #from utils.BrowserUtils.edge_automation_launcher import run_edge_automation
 from selenium_utils.elementFinderUtils.element_finder import ElementFinder
-from pages.BookslotInfoOtpPage import BookslotInfoOtpPage
+from pages.bookslot_info_otp_page import BookslotInfoOtpPage
 from pages.EventSelectionPage import EventSelectionPage
 from pages.schedular_page import WebSchedulerPage
 # After selecting appointment slot
@@ -93,7 +93,6 @@ def test_run_full():
         scheduler.enter_date_range(2, 90)  # Selects today+3 to today+30
         scheduler.enter_zip_distance(test_data["zip"], test_data["zip_distance"])
         #scheduler.select_last_date()
-        time.sleep(6)
         scheduler.click_first_available_slot()
         logging.info("✅ Step 3: Scheduler slot selection done.")
 

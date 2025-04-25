@@ -50,6 +50,9 @@ def pytest_runtest_makereport(item, call):
     browser = item.funcargs.get("browser")
 
     if result.when == "call" and result.failed and screenshot_enabled and browser:
+        if "driver" in item.funcargs:
+            allure.attach(item.funcargs["driver"].get_screenshot_as_png(),
+                          name="screenshot", attachment_type=allure.attachment_type.PNG)
         screenshot_path = f"screenshots/{item.name}.png"
         os.makedirs("screenshots", exist_ok=True)
         browser.save_screenshot(screenshot_path)
