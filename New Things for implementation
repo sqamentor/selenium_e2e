@@ -1,0 +1,7 @@
+We want to find element with  this approach 
+1. just extract complete resource  
+2. then analyis page resurces  for the element that need to be click or select  
+3. then find best possbilties to click or select as per resources analysis the  for that element like xpath is best or csselector is best or any other is best that hav 100% chance to meet successfully 
+then i will supply feild  name or label name or placeholder and feild type like text box, drop down, calender , time and date  nested drop down any thinsg which is possible  if AI can identify this things then it will best or not then i will provide
+
+on basis of above things then element will be click or select or enter value  
