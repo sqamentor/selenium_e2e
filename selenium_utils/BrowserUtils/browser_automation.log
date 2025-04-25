@@ -1,4 +1,58 @@
-[2025-04-25 07:14:27,233] [INFO] [OK]-[LOGGING] Writing logs to: C:\Users\LokendraSingh\selenium_e2e\selenium_utils\BrowserUtils\browser_automation.log
-[2025-04-25 07:14:27,238] [INFO] [OK]-[LOGGING] Writing logs to: C:\Users\LokendraSingh\selenium_e2e\selenium_utils\elementFinderUtils\TestScript-ElementFinder.log
-[2025-04-25 07:14:27,239] [INFO] [OK]-[LOGGING] Writing logs to: C:\Users\LokendraSingh\selenium_e2e\pages\Bookslot_info_otp_page.log
-[2025-04-25 07:14:27,240] [INFO] 🚀 Starting UI interaction with Book Slot page...
+[2025-04-25 13:57:25,426] [INFO] [OK]-[LOGGING] Writing logs to: C:\Users\LokendraSingh\selenium_e2e\selenium_utils\BrowserUtils\browser_automation.log
+[2025-04-25 13:57:25,428] [INFO] [OK]-[LOGGING] Writing logs to: C:\Users\LokendraSingh\selenium_e2e\pages\Bookslot_info_otp_page_ai.log
+[2025-04-25 13:57:25,428] [INFO] 🚀 Starting AI-driven UI interaction with Book Slot page...
+[2025-04-25 13:57:25,428] [INFO] [ENV] Target URL: https://bookslot-staging.centerforvein.com/?istestrecord=1
+[2025-04-25 13:57:25,428] [INFO] [OK] Setting up driver directory...
+[2025-04-25 13:57:25,429] [INFO] [OK] Terminating existing Chrome/Chromedriver processes...
+[2025-04-25 13:57:25,788] [INFO] [OK] Chrome/Chromedriver processes terminated.
+[2025-04-25 13:57:25,789] [INFO] [OK] Detecting local Chrome version...
+[2025-04-25 13:57:25,807] [INFO] [OK] Detected local Chrome version: 135.0.7049.115
+[2025-04-25 13:57:25,808] [INFO] [OK] Checking existing ChromeDriver compatibility...
+[2025-04-25 13:57:25,849] [INFO] [OK] Existing ChromeDriver version detected: 135.0.7049.84
+[2025-04-25 13:57:25,850] [INFO] [✓] Reusing existing ChromeDriver 135.0.7049.84 compatible with Chrome 135.0.7049.115
+[2025-04-25 13:57:25,855] [INFO] [OK] Temporary Chrome profile created at C:\Users\LOKEND~1\AppData\Local\Temp\tmpkfsiht0y
+[2025-04-25 13:57:25,857] [INFO] [OK] Launching Chrome browser with WebDriver...
+[2025-04-25 13:57:36,400] [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[2025-04-25 13:57:36,412] [INFO] [AI] Page Verification Result:
+This appears to be a real page rather than a login screen or an error page. The presence of user-friendly elements such as "Book Appointment," a phone number, language selection (English and Spanish), and typical footer links ("Privacy Policy," "Terms of Use") strongly suggests a legitimate landing or scheduling webpage.
+
+Confidence score: 9/10
+[2025-04-25 13:57:36,472] [INFO] [OK] Browser successfully launched and page loaded.
+[2025-04-25 13:57:36,473] [INFO] [OK] Cleaning up resources...
+[2025-04-25 13:57:36,474] [INFO] [OK] Cleanup completed.
+[2025-04-25 13:57:53,632] [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[2025-04-25 13:57:53,644] [INFO] [AI] Run Summary:
+### Summary of Selenium Logs:
+
+#### General Overview:
+- **Browser Initialization:**  
+  Successfully initialized Chrome browser with WebDriver. Target URL `https://bookslot-staging.centerforvein.com/?istestrecord=1` loaded without issues.
+- **AI Page Verification:**  
+  AI confidently identified the page as legitimate (confidence score: **9/10**).
+
+#### Highlights on Potential Issues:
+- **ChromeDriver Version Mismatch Alert:**  
+  - Detected Chrome version: `135.0.7049.115`
+  - Detected ChromeDriver version: `135.0.7049.84` *(slightly different minor version)*
+  - Although current ChromeDriver reused successfully, version discrepancy noted.
+  - **Advisory:** Usually acceptable for minor versions, but minor incompatibility risks exist. Monitor for intermittent/flaky issues.
+
+#### Errors, Timeouts, and Stability Concerns:
+- **Errors and Timeouts:**  
+  None observed explicitly in logs.
+- **Suspicious or Flaky Behavior:**  
+  No suspicious behavior or flakiness noted in this test run apart from minor version mismatch caution.
+
+#### Cleanup:
+- Successfully terminated processes and cleaned resources.
+
+### Recommendation:
+- Monitor closely in subsequent test runs to ensure ChromeDriver/Chrome version differences do not introduce flaky behaviors or stability issues.
+[2025-04-25 13:57:54,387] [INFO] 🖱️ Hovered over: <label> None
+[2025-04-25 13:57:55,372] [INFO] 🖱️ Hovered over: <label> None
+[2025-04-25 13:57:56,779] [INFO] 🖱️ Hovered over: <a> 
+[2025-04-25 13:57:57,697] [INFO] 🖱️ Hovered over: <button> 
+[2025-04-25 13:57:58,971] [INFO] 🖱️ Hovered over: <a> 
+[2025-04-25 13:58:03,341] [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[2025-04-25 13:58:03,343] [ERROR] ❌ Failed during button or interaction click: No matching field found for: Code
+[2025-04-25 13:58:03,344] [INFO] ⏳ Bookslots Patient Information Page AI Test complete.

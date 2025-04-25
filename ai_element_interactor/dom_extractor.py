@@ -1,4 +1,3 @@
-
 from selenium.webdriver.remote.webdriver import WebDriver
 
 def extract_all_elements(driver: WebDriver):
@@ -16,17 +15,24 @@ def extract_all_elements(driver: WebDriver):
         }
     }
 
+    function getLabelText(el) {
+        let label = document.querySelector("label[for='" + el.id + "']");
+        return label ? label.innerText.trim() : "";
+    }
+
     let elements = [];
-    document.querySelectorAll("*").forEach(el => {
+    document.querySelectorAll("input, select, button, textarea").forEach(el => {
         elements.push({
             tag: el.tagName,
-            id: el.id,
-            name: el.name,
-            class: el.className,
+            id: el.id || "",
+            name: el.name || "",
+            formcontrolname: el.getAttribute("formcontrolname") || "",
+            class: el.className || "",
             placeholder: el.placeholder || "",
             type: el.type || "",
-            text: el.innerText || "",
-            aria: el.getAttribute("aria-label") || "",
+            aria_label: el.getAttribute("aria-label") || "",
+            label: getLabelText(el),
+            text: el.innerText || el.textContent || "",
             xpath: getXPath(el)
         });
     });

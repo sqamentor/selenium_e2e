@@ -38,7 +38,7 @@ def interact_by_label(driver, label, field_type, value=None):
 
     cached = cache_lookup(url, label, field_type)
     if cached:
-        return try_selectors(driver, [(cached['type'], cached['value'], 1.0)], field_type, value)
+        return try_selectors(driver, [(cached['type'], cached['value'], 1.0)], field_type, value, label)
 
     elements = extract_all_elements(driver)
     best_match = openai_match_field(elements, label, field_type)
@@ -47,7 +47,7 @@ def interact_by_label(driver, label, field_type, value=None):
         raise Exception("No matching field found for: " + label)
 
     selector_candidates = rank_selectors(best_match)
-    result = try_selectors(driver, selector_candidates, field_type, value)
+    result = try_selectors(driver, selector_candidates, field_type, value, label)
 
     sel = result['selector']
     cache_store(url, label, field_type, sel["type"], sel["value"])

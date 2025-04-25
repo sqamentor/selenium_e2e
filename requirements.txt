@@ -12,6 +12,7 @@ sentence-transformers
 deepdiff
 prance
 openapi-core
+openai
 pyyaml
 fuzzywuzzy
 python-Levenshtein
@@ -20,3 +21,5 @@ coverage
 pytest-rerunfailures
 flake8 
 black
+pytesseract
+Pillow

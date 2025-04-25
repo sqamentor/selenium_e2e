@@ -1,28 +1,73 @@
-
 import openai
 import os
+import re
+from dotenv import load_dotenv
+load_dotenv()
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
+client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+# Map common user-friendly labels to expected field intents
+LABEL_ALIASES = {
+    "otp": "Code",
+    "one time password": "Code",
+    "verify otp": "Code",
+    "verify code": "Verify Code",
+    "submit otp": "Verify Code",
+    "text message": "Text",
+    "phone": "Cell Phone Number",
+    "email address": "E-mail",
+    "zip": "Zip Code",
+    "postal code": "Zip Code"
+}
+
+def normalize_label(label):
+    label = label.lower().strip()
+    return LABEL_ALIASES.get(label, label)
 
 def openai_match_field(candidates, user_label: str, field_type: str):
-    prompt = f"""
-You are a form field identifier AI. Match the following user request with the best DOM element.
+    user_label = normalize_label(user_label)
+    # Filter and prioritize input-like fields and select/button
+    filtered = [c for c in candidates if c["tag"].lower() in ["input", "button", "select", "textarea"]]
+    trimmed = filtered[:30]  # Limit to top 30 for token limits
 
-User label: "{user_label}"
-Expected type: "{field_type}"
+    # Improve prompt quality
+    prompt = f"""
+You are a smart DOM element matcher. Match the user's requested label and interaction type to the most appropriate DOM element.
+
+Label: "{user_label}"
+Expected interaction type: "{field_type}" (e.g. textbox, dropdown, click)
+
+Each DOM element includes fields like:
+  - tag
+  - id
+  - formcontrolname
+  - name
+  - class
+  - aria_label
+  - label (from associated <label>)
+  - placeholder
+  - text (innerText)
+  - xpath
 
 Candidates:
-{candidates}
+{trimmed}
 
-Return the index of the best matching field (starting from 0), or -1 if none match.
+Only return the index (number). Do NOT return text or explanation.
 """
-    response = openai.ChatCompletion.create(
-        model="gpt-4",
-        messages=[{ "role": "user", "content": prompt }]
-    )
-    answer = response["choices"][0]["message"]["content"]
+
     try:
-        idx = int(answer.strip())
-        return candidates[idx] if 0 <= idx < len(candidates) else None
-    except:
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": prompt}]
+        )
+        answer = response.choices[0].message.content.strip()
+
+        match = re.search(r'(\\d+)', answer)
+        if match:
+            idx = int(match.group(1))
+            return trimmed[idx] if 0 <= idx < len(trimmed) else None
+        else:
+            return None
+    except Exception as e:
+        print("❌ OpenAI matching failed:", e)
         return None

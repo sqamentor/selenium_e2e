@@ -1,0 +1,36 @@
+{
+  "https://bookslot-staging.centerforvein.com/basic-info": {
+    "First Name:textbox": {
+      "type": "xpath",
+      "value": "//*[@id=\"FirstName\"]"
+    },
+    "Last Name:textbox": {
+      "type": "xpath",
+      "value": "//*[@id=\"LastName\"]"
+    },
+    "Email:textbox": {
+      "type": "xpath",
+      "value": "//*[@id=\"Email\"]"
+    },
+    "Phone Number:textbox": {
+      "type": "xpath",
+      "value": "//*[@id=\"CellPhone\"]/INPUT[1]"
+    },
+    "ZIP Code:textbox": {
+      "type": "xpath",
+      "value": "//*[@id=\"ZipCode\"]"
+    },
+    "Text:click": {
+      "type": "xpath",
+      "value": "//*[@id=\"FirstName\"]"
+    },
+    "Send Me The Code:click": {
+      "type": "xpath",
+      "value": "//*[@id=\"form\"]/DIV[1]/DIV[1]/DIV[7]/BUTTON[1]"
+    },
+    "OTP:textbox": {
+      "type": "xpath",
+      "value": "//*[@id=\"ZipCode\"]"
+    }
+  }
+}
