@@ -4,6 +4,7 @@ from .dom_extractor import extract_all_elements
 from .label_matcher import openai_match_field
 from .selector_ranker import rank_selectors
 from .interaction_engine import try_selectors
+import logging
 
 CACHE_PATH = "ai_element_interactor/selector_cache.json"
 
@@ -59,3 +60,19 @@ def interact_by_label(driver, label, field_type, value=None):
         "value_entered": value,
         "source": "AI Ranker or Fallback"
     }
+
+def fallback_find_code_field(driver, input_value):
+    """Special fallback: Locate OTP/Code fields even if AI matching fails."""
+    logging.info("[FALLBACK] Trying fallback to locate OTP/Code input...")
+    try:
+        otp_inputs = driver.find_elements(By.CSS_SELECTOR, "input.otp-field")
+        for otp in otp_inputs:
+            if otp.is_displayed() and otp.is_enabled():
+                logging.info("[FALLBACK] OTP input field found! Attempting to fill...")
+                otp.clear()
+                otp.send_keys(input_value)
+                logging.info(f"[FALLBACK] ✅ Entered OTP Code: {input_value}")
+                return True
+    except Exception as e:
+        logging.error(f"[FALLBACK] ❌ Failed during OTP fallback: {e}")
+    return False
