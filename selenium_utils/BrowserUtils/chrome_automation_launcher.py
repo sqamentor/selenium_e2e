@@ -24,7 +24,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException,TimeoutException
 from dotenv import load_dotenv
 import re
 import pathlib
@@ -350,7 +350,16 @@ def run_chrome_automation(target_url):
         #time.sleep(3)
         driver.maximize_window()
         driver.get(target_url)
+        # After page load:
+        try:
+            WebDriverWait(driver, 20).until(
+                EC.presence_of_element_located((By.ID, "form"))
+            )
+            logging.info("✅ Booking form detected.")
+        except TimeoutException:
+            logging.error("❌ Booking form not detected even after wait. Page might be broken.")
         #time.sleep(3)  # wait a moment for the page to try loading
+        
         if ENABLE_AI:
             verify_page_with_ai(driver, target_url)
 

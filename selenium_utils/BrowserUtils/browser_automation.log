@@ -1,59 +1,52 @@
-[2025-04-26 05:56:55,690] [INFO] [OK]-[LOGGING] Writing logs to: C:\Users\LokendraSingh\selenium_e2e\selenium_utils\BrowserUtils\browser_automation.log
-[2025-04-26 05:56:55,693] [INFO] [OK]-[LOGGING] Writing logs to: C:\Users\LokendraSingh\selenium_e2e\pages\Bookslot_info_otp_page_ai.log
-[2025-04-26 05:56:55,693] [INFO] 🚀 Starting AI-driven UI interaction with Book Slot page...
-[2025-04-26 05:56:55,693] [INFO] [ENV] Target URL: https://bookslot-staging.centerforvein.com/?istestrecord=1
-[2025-04-26 05:56:55,694] [INFO] [OK] Setting up driver directory...
-[2025-04-26 05:56:55,694] [INFO] [OK] Terminating existing Chrome/Chromedriver processes...
-[2025-04-26 05:56:55,955] [INFO] [OK] Chrome/Chromedriver processes terminated.
-[2025-04-26 05:56:55,956] [INFO] [OK] Detecting local Chrome version...
-[2025-04-26 05:56:55,968] [INFO] [OK] Detected local Chrome version: 135.0.7049.115
-[2025-04-26 05:56:55,968] [INFO] [OK] Checking existing ChromeDriver compatibility...
-[2025-04-26 05:56:56,004] [INFO] [OK] Existing ChromeDriver version detected: 135.0.7049.84
-[2025-04-26 05:56:56,004] [INFO] [✓] Reusing existing ChromeDriver 135.0.7049.84 compatible with Chrome 135.0.7049.115
-[2025-04-26 05:56:56,028] [INFO] [OK] Temporary Chrome profile created at C:\Users\LOKEND~1\AppData\Local\Temp\tmpw2yo0_wp
-[2025-04-26 05:56:56,030] [INFO] [OK] Launching Chrome browser with WebDriver...
-[2025-04-26 05:57:07,834] [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
-[2025-04-26 05:57:07,843] [INFO] [AI] Page Verification Result:
-This looks like a real web page rather than a login screen or browser/network error. It contains elements commonly found in real web pages, such as contact details, language selection (English/Spanish), and links for standard items like privacy policy and terms of use. The presence of the text "Book Appointment" also indicates it's primarily an appointment-booking page and not an error page or login prompt.
+[2025-04-26 06:40:20,787] [INFO] [OK]-[LOGGING] Writing logs to: C:\Users\LokendraSingh\selenium_e2e\selenium_utils\BrowserUtils\browser_automation.log
+[2025-04-26 06:40:20,789] [INFO] [OK]-[LOGGING] Writing logs to: C:\Users\LokendraSingh\selenium_e2e\pages\Bookslot_info_otp_page_ai.log
+[2025-04-26 06:40:20,789] [INFO] 🚀 Starting AI-driven UI interaction with Book Slot page...
+[2025-04-26 06:40:20,790] [INFO] [ENV] Target URL: https://bookslot-staging.centerforvein.com/?istestrecord=1
+[2025-04-26 06:40:20,790] [INFO] [OK] Setting up driver directory...
+[2025-04-26 06:40:20,790] [INFO] [OK] Terminating existing Chrome/Chromedriver processes...
+[2025-04-26 06:40:21,086] [INFO] [OK] Chrome/Chromedriver processes terminated.
+[2025-04-26 06:40:21,087] [INFO] [OK] Detecting local Chrome version...
+[2025-04-26 06:40:21,104] [INFO] [OK] Detected local Chrome version: 135.0.7049.115
+[2025-04-26 06:40:21,104] [INFO] [OK] Checking existing ChromeDriver compatibility...
+[2025-04-26 06:40:21,138] [INFO] [OK] Existing ChromeDriver version detected: 135.0.7049.84
+[2025-04-26 06:40:21,138] [INFO] [✓] Reusing existing ChromeDriver 135.0.7049.84 compatible with Chrome 135.0.7049.115
+[2025-04-26 06:40:21,141] [INFO] [OK] Temporary Chrome profile created at C:\Users\LOKEND~1\AppData\Local\Temp\tmp5urr796n
+[2025-04-26 06:40:21,143] [INFO] [OK] Launching Chrome browser with WebDriver...
+[2025-04-26 06:40:29,244] [INFO] ✅ Booking form detected.
+[2025-04-26 06:40:35,478] [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[2025-04-26 06:40:35,490] [INFO] [AI] Page Verification Result:
+This looks like a real page. Specifically, it appears to be a legitimate form page used to collect patient information for booking or scheduling an appointment, rather than a login screen or an error page. The form requests basic details such as first and last name, email, phone number, and zip code. It also includes messages typical for appointment-booking pages (e.g., privacy policy, terms of use, verification code). There is no indication of an error or issue.  
 
-Confidence score: 9 out of 10
-[2025-04-26 05:57:07,886] [INFO] [OK] Browser successfully launched and page loaded.
-[2025-04-26 05:57:07,886] [INFO] [OK] Cleaning up resources...
-[2025-04-26 05:57:07,888] [INFO] [OK] Cleanup completed.
-[2025-04-26 05:57:23,692] [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
-[2025-04-26 05:57:23,698] [INFO] [AI] Run Summary:
-## Selenium Log Summary:
+Confidence score: 9.5/10
+[2025-04-26 06:40:35,538] [INFO] [OK] Browser successfully launched and page loaded.
+[2025-04-26 06:40:35,538] [INFO] [OK] Cleaning up resources...
+[2025-04-26 06:40:35,540] [INFO] [OK] Cleanup completed.
+[2025-04-26 06:40:47,451] [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[2025-04-26 06:40:47,453] [INFO] [AI] Run Summary:
+### Selenium Log Summary:
+- **Execution Date & Time:** April 26, 2025, at roughly 06:40 AM.
+- **Environment & URL:** Testing on staging environment: `https://bookslot-staging.centerforvein.com/?istestrecord=1`
+- **Chrome and ChromeDriver:**
+  - Local Chrome Version: **135.0.7049.115**
+  - ChromeDriver Version: **135.0.7049.84** (Reported compatible and successfully reused)
+- **AI Page Verification:**
+  - Page identified correctly as a legitimate appointment-booking page.
+  - AI evaluation confidence score high (9.5/10), no suspicious elements detected.
+- **Errors, Issues, or Flaky Behavior Detected:** 
+  - **Nothing suspicious** or **flaky** was reported in this log.
+  - **No timeouts or browser launch errors observed.**
+- **Overall Result:**  
+  ✅ **Successful execution**, page loaded correctly & resources cleaned up successfully.
 
-### General Overview:
-- Successfully initiated test execution and logging setup.
-- Chrome browser launched successfully with ChromeDriver.
-
-### ChromeDriver / Browser Info:
-- Detected Chrome version: **135.0.7049.115**
-- Existing ChromeDriver version: **135.0.7049.84** considered compatible and reused.
-
-### API / AI Verification:
-- AI verified page as authentic and properly loaded, assigning a high confidence (9 out of 10) score.
-
-### Issues & Errors:
-- **No critical errors**, exceptions, or obvious abnormal behaviors reported in the given logs.
-- **No timeouts or flakiness** reported or evident.
-
-### Resource Cleanup:
-- Cleanup process executed successfully without issues.
-
-### Recommendation:
-- Continue regular monitoring to detect any intermittencies or potential ChromeDriver mismatches. Currently, the minor version difference (**7049.84 vs. 7049.115**) caused no issues, but keep monitoring as ChromeDriver updates might be required in future.
-
-### Conclusion:
-- ✅ Tests passed cleanly.
-- ⚠️ No immediate suspicious, flaky behaviors or errors observed.
-[2025-04-26 05:57:24,471] [INFO] 🖱️ Hovered over: <label> None
-[2025-04-26 05:57:25,650] [INFO] 🖱️ Hovered over: <label> None
-[2025-04-26 05:57:26,759] [INFO] 🖱️ Hovered over: <label> None
-[2025-04-26 05:57:28,154] [INFO] 🖱️ Hovered over: <a> 
-[2025-04-26 05:57:29,237] [INFO] 🖱️ Hovered over: <label> None
-[2025-04-26 05:57:33,501] [WARNING] [AI] Selector failed: xpath -> //*[@id="FirstName"] | Error: Message: invalid argument: invalid locator
+**Conclusion:** All steps executed smoothly. No issues, timeouts, ChromeDriver anomalies, or flaky behavior identified.
+[2025-04-26 06:40:48,159] [INFO] 🖱️ Hovered over: <label> None
+[2025-04-26 06:40:49,042] [INFO] 🖱️ Hovered over: <input> FirstName
+[2025-04-26 06:40:50,340] [INFO] 🖱️ Hovered over: <input> Email
+[2025-04-26 06:40:51,356] [INFO] 🖱️ Hovered over: <label> None
+[2025-04-26 06:40:52,223] [INFO] 🖱️ Hovered over: <input> Email
+[2025-04-26 06:40:55,876] [INFO] [SAFE] Forcing By.XPATH due to detected XPath pattern: //*[@id="FirstName"]
+[2025-04-26 06:40:55,877] [INFO] [SAFE] Using cleaned locator: //*[@id="FirstName"]
+[2025-04-26 06:40:56,010] [WARNING] [AI] Selector failed: xpath -> //*[@id="FirstName"] | Error: Message: invalid argument: invalid locator
   (Session info: chrome=135.0.7049.115)
 Stacktrace:
 	GetHandleVerifier [0x007180E3+60707]
@@ -79,8 +72,10 @@ Stacktrace:
 	RtlInitializeExceptionChain [0x77CCD0BB+107]
 	RtlGetAppContainerNamedObjectPath [0x77CCD041+561]
 
-[2025-04-26 05:57:33,502] [ERROR] ❌ Failed to interact with a field using AI: ❌ All selector strategies failed.
-[2025-04-26 05:57:33,599] [WARNING] [AI] Selector failed: xpath -> //*[@id="FirstName"] | Error: Message: invalid argument: invalid locator
+[2025-04-26 06:40:56,012] [ERROR] ❌ Failed to interact with a field using AI: ❌ All selector strategies failed.
+[2025-04-26 06:40:56,018] [INFO] [SAFE] Forcing By.XPATH due to detected XPath pattern: //*[@id="FirstName"]
+[2025-04-26 06:40:56,018] [INFO] [SAFE] Using cleaned locator: //*[@id="FirstName"]
+[2025-04-26 06:40:56,082] [WARNING] [AI] Selector failed: xpath -> //*[@id="FirstName"] | Error: Message: invalid argument: invalid locator
   (Session info: chrome=135.0.7049.115)
 Stacktrace:
 	GetHandleVerifier [0x007180E3+60707]
@@ -106,5 +101,5 @@ Stacktrace:
 	RtlInitializeExceptionChain [0x77CCD0BB+107]
 	RtlGetAppContainerNamedObjectPath [0x77CCD041+561]
 
-[2025-04-26 05:57:33,599] [ERROR] ❌ Failed during button or interaction click: ❌ All selector strategies failed.
-[2025-04-26 05:57:33,599] [INFO] ⏳ Bookslots Patient Information Page AI Test complete.
+[2025-04-26 06:40:56,082] [ERROR] ❌ Failed during button or interaction click: ❌ All selector strategies failed.
+[2025-04-26 06:40:56,083] [INFO] ⏳ Bookslots Patient Information Page AI Test complete.

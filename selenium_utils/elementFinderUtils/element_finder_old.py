@@ -51,36 +51,43 @@ class ElementFinder:
             raise ValueError(f"Unsupported locator type: {locator_type}")
         return (mapping[locator_type], locator_value)
 
-    def find(self, by_type, locator, visible=False, clickable=False):
+    def find(self, locator_type, locator_value, visible=True, clickable=False, multiple=False):
+        by_locator = self.get_locator(locator_type, locator_value)
         try:
-            # 🚨 Validation before usage
-            if by_type.lower() == "xpath" and (not locator.strip().startswith(("/", "//"))) or "None" in locator or "undefined" in locator
-                logging.error(f"❌ Invalid XPath locator skipped: {locator}")
-                return None
-            if not locator.strip():
-                logging.error(f"❌ Empty locator skipped")
-                return None
-
-            wait = WebDriverWait(self.driver, self.timeout)
-
-            if visible and clickable:
-                element = wait.until(EC.element_to_be_clickable((getattr(By, by_type.upper()), locator)))
+            wait = WebDriverWait(self.driver, self.timeout, self.poll_frequency, ignored_exceptions=[StaleElementReferenceException])
+            
+            if multiple:
+                logging.info(f"🔍 Finding all elements: {by_locator}")
+                elements = wait.until(EC.presence_of_all_elements_located(by_locator))
+                for elem in elements: self.highlight(elem)
+                return elements
+            if clickable:
+                logging.info(f"🔍 Finding clickable element: {by_locator}")
+                #element = wait.until(EC.element_to_be_clickable(by_locator))
+                element = wait.until(EC.element_to_be_clickable((getattr(By, locator_type.upper()), locator_value)))
             elif visible:
-                element = wait.until(EC.visibility_of_element_located((getattr(By, by_type.upper()), locator)))
+                logging.info(f"🔍 Finding visible element: {by_locator}")
+                #element = wait.until(EC.visibility_of_element_located(by_locator))
+                element = wait.until(EC.visibility_of_element_located((getattr(By, locator_type.upper()), locator_value)))
             else:
-                element = wait.until(EC.presence_of_element_located((getattr(By, by_type.upper()), locator)))
+                logging.info(f"🔍 Finding present element (not necessarily visible): {by_locator}")
+                #element = wait.until(EC.presence_of_element_located(by_locator))
+                element = wait.until(EC.presence_of_element_located((getattr(By, locator_type.upper()), locator_value)))
+            logging.info(f"✅ Found element [{locator_type}] {locator_value}")
 
-            logging.info(f"✅ Found element [{by_type}] {locator}")
+            # 🚀 After finding, wait for any loaders to disappear
             wait_for_loader_to_disappear(self.driver)
+
+            self.highlight(element)
             return element
 
         except TimeoutException:
-            logging.error(f"⏱️ Timeout: Element not found using {by_type} = {locator}")
-            self._capture_failure_screenshot(f"timeout_{by_type}_{locator}")
+            logging.error(f"⏱️ Timeout: Element not found using {locator_type} = {locator_value}")
+            self._capture_failure_screenshot(f"timeout_{locator_type}_{locator_value}")
             return None
         except Exception as e:
             logging.exception(f"❌ Unexpected error while finding element: {e}")
-            self._capture_failure_screenshot(f"error_{by_type}_{locator}")
+            self._capture_failure_screenshot(f"error_{locator_type}_{locator_value}")
             return None
 
     def highlight(self, element):

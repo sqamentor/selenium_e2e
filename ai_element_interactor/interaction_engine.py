@@ -1,8 +1,11 @@
+
 from selenium.common.exceptions import NoSuchElementException, ElementNotInteractableException
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.by import By
 from selenium_utils.BrowserUtils.loader_utils import wait_for_loader_to_disappear
+import unicodedata
 import logging
+import time
 
 def try_selectors(driver, selectors, field_type, input_value=None, label=""):
     by_map = {
@@ -47,15 +50,39 @@ def try_selectors(driver, selectors, field_type, input_value=None, label=""):
                 continue
 
             # 🚨 Validate XPath
-            if selector_type == "xpath" and not selector_value.strip().startswith(("/", "//")):
+            if selector_type.lower() == "xpath" and not selector_value.strip().startswith(("/", "//")):
                 logging.warning(f"[AI] Skipping invalid XPath: {selector_value}")
                 continue
 
-            if selector_type not in by_map:
+            if selector_type.lower() not in by_map:
                 logging.warning(f"[AI] Unknown selector type: {selector_type}")
                 continue
 
-            element = driver.find_element(by_map[selector_type], selector_value)
+            # 🚀 Force correction: If locator looks like XPath but by_type is wrong
+            if selector_value.strip().startswith(("/", "//")):
+                logging.info(f"[SAFE] Forcing By.XPATH due to detected XPath pattern: {selector_value}")
+                by_used = By.XPATH
+            else:
+                by_used = by_map[selector_type.lower()]
+
+            # 🚿 Sanitize locator
+            selector_value = selector_value.strip()
+            selector_value = selector_value.replace('\n', '').replace('\t', '').replace('\r', '')
+            selector_value = unicodedata.normalize("NFKC", selector_value)
+            logging.info(f"[SAFE] Using cleaned locator: {selector_value}")
+
+            # 🔁 Retry mechanism
+            retry_attempts = 3
+            for attempt in range(retry_attempts):
+                try:
+                    element = driver.find_element(by_used, selector_value)
+                    break  # ✅ Success
+                except Exception as e_inner:
+                    if attempt < retry_attempts - 1:
+                        logging.warning(f"[RETRY] Selector attempt {attempt+1} failed, retrying after 1s... | {e_inner}")
+                        time.sleep(1)
+                    else:
+                        raise e_inner
 
             if field_type == "textbox":
                 element.clear()

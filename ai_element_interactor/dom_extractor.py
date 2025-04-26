@@ -33,7 +33,7 @@ def extract_all_elements(driver: WebDriver):
             aria_label: el.getAttribute("aria-label") || "",
             label: getLabelText(el),
             text: el.innerText || el.textContent || "",
-            xpath: getXPath(el)
+            xpath: '//*[@id="' + el.id + '"]'
         });
     });
     return elements;
