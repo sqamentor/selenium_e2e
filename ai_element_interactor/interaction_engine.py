@@ -121,7 +121,7 @@ def try_selectors(driver, selectors, field_type, input_value=None, label=""):
 
             if field_type == "textbox":
                 element.clear()
-                simulate_typing(element, input_value)
+                #simulate_typing(element, input_value)
                 element.send_keys(input_value)
             elif field_type == "dropdown":
                 Select(element).select_by_visible_text(input_value)
