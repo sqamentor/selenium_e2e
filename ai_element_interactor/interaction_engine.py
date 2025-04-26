@@ -1,21 +1,18 @@
-# 🔹 Standard Library
-import logging
-import time
-import unicodedata
+# selenium_utils/AI_Utils/interaction_engine.py
+# (Patched interaction_engine with Smart Retry, Fallbacks, OTP Handling)
 
-# 🔹 Third-Party
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException, ElementNotInteractableException
 from selenium.webdriver.support.ui import Select
-
-# 🔹 Internal Utilities
 from selenium_utils.BrowserUtils.loader_utils import wait_for_loader_to_disappear
 from utils.human_actions import simulate_typing
+from utils.retry_utils import smart_retry
+
+import unicodedata
+import time
+import logging
 
 def smart_find_element(driver, by, value, retries=3, wait_between=1):
-    """
-    Find element robustly with retries, Shadow DOM fallback, and iframe switching.
-    """
     for attempt in range(retries):
         try:
             element = driver.find_element(by, value)
@@ -24,7 +21,6 @@ def smart_find_element(driver, by, value, retries=3, wait_between=1):
         except Exception as normal_e:
             logging.warning(f"[SMART_FIND] Normal find attempt {attempt+1} failed. Trying Shadow DOM and iframe fallback... {normal_e}")
 
-            # Shadow DOM fallback
             try:
                 all_elements = driver.execute_script('return document.querySelectorAll("*")')
                 for root in all_elements:
@@ -40,14 +36,13 @@ def smart_find_element(driver, by, value, retries=3, wait_between=1):
             except Exception:
                 pass
 
-            # iframe fallback
             try:
                 iframes = driver.find_elements(By.TAG_NAME, "iframe")
-                logging.info(f"[IFRAME] Found {len(iframes)} iframe(s) on page during fallback.")
+                logging.info(f"[IFRAME] Found {len(iframes)} iframe(s) on the page during fallback check.")
                 for index, iframe in enumerate(iframes):
                     try:
                         driver.switch_to.frame(iframe)
-                        logging.info(f"[IFRAME] Switched to iframe {index+1}/{len(iframes)} for searching.")
+                        logging.info(f"[IFRAME] Switched into iframe {index+1}/{len(iframes)} for search...")
                         iframe_element = driver.find_element(by, value)
                         logging.info(f"[IFRAME] Found element inside iframe {index+1}: {value}")
                         return iframe_element
@@ -56,16 +51,14 @@ def smart_find_element(driver, by, value, retries=3, wait_between=1):
                         continue
                 driver.switch_to.default_content()
             except Exception as iframe_error:
-                logging.warning(f"[IFRAME] Iframe fallback failed: {iframe_error}")
+                logging.warning(f"[IFRAME] Iframe search fallback failed: {iframe_error}")
 
             time.sleep(wait_between)
 
     raise Exception(f"❌ smart_find_element() failed after {retries} retries (including Shadow DOM and iframe fallback) for: {value}")
 
+@smart_retry(exceptions=(Exception,), tries=3, delay=1)
 def try_selectors(driver, selectors, field_type, input_value=None, label=""):
-    """
-    Try a list of selectors safely and fallback to special strategies for OTP or Verify buttons.
-    """
     by_map = {
         "id": By.ID,
         "name": By.NAME,
@@ -73,75 +66,54 @@ def try_selectors(driver, selectors, field_type, input_value=None, label=""):
         "css": By.CSS_SELECTOR
     }
 
-    # OTP fallback for Code field
     if label.lower() in ["code", "otp", "verify otp", "verification code"] and field_type == "textbox":
-        logging.info("[SAFE] Trying special OTP fallback: CSS 'input.otp-field' inside p-inputmask")
+        logging.info("[SAFE] Trying special OTP field fallback: CSS input.otp-field")
         try:
-            # Find ALL otp input fields
-            otp_inputs = driver.find_elements(By.CSS_SELECTOR, "input.otp-field")
-            for otp_input in otp_inputs:
+            otp_input_candidates = driver.find_elements(By.CSS_SELECTOR, "input.otp-field")
+            for otp_input in otp_input_candidates:
                 if otp_input.is_displayed() and otp_input.is_enabled():
                     otp_input.clear()
                     simulate_typing(otp_input, input_value)
                     otp_input.send_keys(input_value)
-                    logging.info(f"✅ [FALLBACK] OTP code entered successfully into input.otp-field: {input_value}")
-                    wait_for_loader_to_disappear(driver)
-                    return {
-                        "element": otp_input,
-                        "selector": {"type": "css", "value": "input.otp-field", "score": 1.0}
-                    }
-            logging.error("❌ [FALLBACK] No visible enabled OTP input found.")
+                    logging.info("✅ [FALLBACK] Entered OTP into input.otp-field (dynamic input)")
+                    return {"element": otp_input, "selector": {"type": "css", "value": "input.otp-field", "score": 1.0}}
         except Exception as e:
-            logging.warning(f"[FALLBACK] OTP fallback error: {e}")
+            logging.warning(f"[FALLBACK] OTP fallback failed: {e}")
 
+    time.sleep(1)
 
-    # Verify Code button fallback
-    if label.lower() in ["verify code", "verify otp", "submit code"] and field_type == "click":
-        logging.info("[SAFE] Trying special Verify Code button fallback.")
+    if label.lower() == "verify code" and field_type == "click":
         try:
-            # Look for button by text
-            verify_buttons = driver.find_elements(By.XPATH, "//button[contains(text(), 'Verify')]")
-            for button in verify_buttons:
-                if button.is_displayed() and button.is_enabled():
-                    button.click()
-                    logging.info("✅ [FALLBACK] 'Verify Code' button clicked via fallback XPath (button[contains(text(),'Verify')])")
-                    wait_for_loader_to_disappear(driver)
-                    return {
-                        "element": button,
-                        "selector": {"type": "xpath", "value": "//button[contains(text(), 'Verify')]", "score": 1.0}
-                    }
-            logging.error("❌ [FALLBACK] No visible enabled Verify button found.")
+            button = driver.find_element(By.XPATH, "//button[normalize-space()='Verify Code']")
+            button.click()
+            logging.info("✅ [FALLBACK] 'Verify Code' button clicked via fallback XPath")
+            return {"element": button, "selector": {"type": "xpath", "value": "//button[normalize-space()='Verify Code']", "score": 1.0}}
         except Exception as e:
-            logging.warning(f"[FALLBACK] Verify Code button fallback error: {e}")
+            logging.warning(f"[FALLBACK] Verify Code fallback failed: {e}")
 
-    time.sleep(1)  # slight delay after fallback attempt
-
-    # Normal selector attempts
     for selector_type, selector_value, score in selectors:
         try:
             if not selector_type or not selector_value:
                 logging.warning(f"[AI] Skipping bad selector: {selector_type} -> {selector_value}")
                 continue
 
-            selector_type = selector_type.lower()
-            selector_value = selector_value.strip()
-
-            if selector_type not in by_map:
-                logging.warning(f"[AI] Unknown selector type: {selector_type}")
-                continue
-
-            if selector_type == "xpath" and not selector_value.startswith(("/", "//")):
+            if selector_type.lower() == "xpath" and not selector_value.strip().startswith(("/", "//")):
                 logging.warning(f"[AI] Skipping invalid XPath: {selector_value}")
                 continue
 
-            if selector_value:
-                selector_value = unicodedata.normalize("NFKC", selector_value)
-                selector_value = selector_value.replace("\\n", "").replace("\\t", "").replace("\\r", "")
-                logging.info(f"[SAFE] Using cleaned locator: {selector_value}")
+            if selector_type.lower() not in by_map:
+                logging.warning(f"[AI] Unknown selector type: {selector_type}")
+                continue
 
-            by_used = by_map.get(selector_type)
+            if selector_value.strip().startswith(("/", "//")):
+                by_used = By.XPATH
+            else:
+                by_used = by_map[selector_type.lower()]
 
-            # Smart Find
+            selector_value = selector_value.strip().replace('\n', '').replace('\t', '').replace('\r', '')
+            selector_value = unicodedata.normalize("NFKC", selector_value)
+            logging.info(f"[SAFE] Using cleaned locator: {selector_value}")
+
             element = smart_find_element(driver, by_used, selector_value)
             time.sleep(0.5)
             element = smart_find_element(driver, by_used, selector_value)
@@ -155,11 +127,7 @@ def try_selectors(driver, selectors, field_type, input_value=None, label=""):
                 element.click()
 
             wait_for_loader_to_disappear(driver)
-
-            return {
-                "element": element,
-                "selector": {"type": selector_type, "value": selector_value, "score": score}
-            }
+            return {"element": element, "selector": {"type": selector_type, "value": selector_value, "score": score}}
 
         except (NoSuchElementException, ElementNotInteractableException, Exception) as e:
             logging.warning(f"[AI] Selector failed: {selector_type} -> {selector_value} | Error: {e}")
