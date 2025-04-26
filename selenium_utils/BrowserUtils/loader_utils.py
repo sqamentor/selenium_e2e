@@ -1,28 +1,44 @@
 # selenium_utils/BrowserUtils/loader_utils.py
-
+from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException
 import logging
+import time
 
-def wait_for_loader_to_disappear(driver, timeout=20):
-    try:
-        WebDriverWait(driver, timeout).until(
-            EC.invisibility_of_element_located(("ID", "loader"))
-        )
-        logging.info("✅ Loader disappeared successfully.")
-    except TimeoutException:
-        logging.warning("⚠️ Loader did not disappear within timeout.")
+def wait_for_loader_to_disappear(driver, timeout=30, poll_frequency=0.5):
+    """
+    Wait until common loader/spinner elements disappear from the DOM or become hidden.
+    Supports multiple common loader types: ID-based, aria-busy, spinners, etc.
+    """
+    logging.info("[LOADER] Waiting for any active loader to disappear...")
+    loader_selectors = [
+        (By.ID, "loader"),
+        (By.CLASS_NAME, "spinner"),
+        (By.CLASS_NAME, "loading"),
+        (By.CSS_SELECTOR, "[aria-busy='true']"),
+        (By.CSS_SELECTOR, ".p-progress-spinner"),
+        (By.CSS_SELECTOR, ".p-datatable-loading-overlay")
+    ]
 
-def wait_for_loader_to_appear_and_disappear(driver, timeout=20):
-    try:
-        WebDriverWait(driver, timeout).until(
-            EC.presence_of_element_located(("ID", "loader"))
-        )
-        logging.info("✅ Loader appeared.")
-        WebDriverWait(driver, timeout).until(
-            EC.invisibility_of_element_located(("ID", "loader"))
-        )
-        logging.info("✅ Loader disappeared after appearing.")
-    except TimeoutException:
-        logging.warning("⚠️ Loader did not behave as expected.")
+    end_time = time.time() + timeout
+
+    while time.time() < end_time:
+        active_loaders = []
+
+        for by, locator in loader_selectors:
+            try:
+                elements = driver.find_elements(by, locator)
+                for elem in elements:
+                    if elem.is_displayed():
+                        active_loaders.append(elem)
+            except Exception:
+                continue
+
+        if not active_loaders:
+            logging.info("[LOADER] ✅ No visible loaders found.")
+            return True
+
+        time.sleep(poll_frequency)
+
+    logging.warning("[LOADER] ❌ Timeout reached. Loaders may still be active!")
+    return False
