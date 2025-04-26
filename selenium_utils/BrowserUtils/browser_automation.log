@@ -1,52 +1,64 @@
-[2025-04-26 06:40:20,787] [INFO] [OK]-[LOGGING] Writing logs to: C:\Users\LokendraSingh\selenium_e2e\selenium_utils\BrowserUtils\browser_automation.log
-[2025-04-26 06:40:20,789] [INFO] [OK]-[LOGGING] Writing logs to: C:\Users\LokendraSingh\selenium_e2e\pages\Bookslot_info_otp_page_ai.log
-[2025-04-26 06:40:20,789] [INFO] 🚀 Starting AI-driven UI interaction with Book Slot page...
-[2025-04-26 06:40:20,790] [INFO] [ENV] Target URL: https://bookslot-staging.centerforvein.com/?istestrecord=1
-[2025-04-26 06:40:20,790] [INFO] [OK] Setting up driver directory...
-[2025-04-26 06:40:20,790] [INFO] [OK] Terminating existing Chrome/Chromedriver processes...
-[2025-04-26 06:40:21,086] [INFO] [OK] Chrome/Chromedriver processes terminated.
-[2025-04-26 06:40:21,087] [INFO] [OK] Detecting local Chrome version...
-[2025-04-26 06:40:21,104] [INFO] [OK] Detected local Chrome version: 135.0.7049.115
-[2025-04-26 06:40:21,104] [INFO] [OK] Checking existing ChromeDriver compatibility...
-[2025-04-26 06:40:21,138] [INFO] [OK] Existing ChromeDriver version detected: 135.0.7049.84
-[2025-04-26 06:40:21,138] [INFO] [✓] Reusing existing ChromeDriver 135.0.7049.84 compatible with Chrome 135.0.7049.115
-[2025-04-26 06:40:21,141] [INFO] [OK] Temporary Chrome profile created at C:\Users\LOKEND~1\AppData\Local\Temp\tmp5urr796n
-[2025-04-26 06:40:21,143] [INFO] [OK] Launching Chrome browser with WebDriver...
-[2025-04-26 06:40:29,244] [INFO] ✅ Booking form detected.
-[2025-04-26 06:40:35,478] [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
-[2025-04-26 06:40:35,490] [INFO] [AI] Page Verification Result:
-This looks like a real page. Specifically, it appears to be a legitimate form page used to collect patient information for booking or scheduling an appointment, rather than a login screen or an error page. The form requests basic details such as first and last name, email, phone number, and zip code. It also includes messages typical for appointment-booking pages (e.g., privacy policy, terms of use, verification code). There is no indication of an error or issue.  
+[2025-04-26 06:59:51,599] [INFO] [OK]-[LOGGING] Writing logs to: C:\Users\LokendraSingh\selenium_e2e\selenium_utils\BrowserUtils\browser_automation.log
+[2025-04-26 06:59:51,601] [INFO] [OK]-[LOGGING] Writing logs to: C:\Users\LokendraSingh\selenium_e2e\pages\Bookslot_info_otp_page_ai.log
+[2025-04-26 06:59:51,601] [INFO] 🚀 Starting AI-driven UI interaction with Book Slot page...
+[2025-04-26 06:59:51,601] [INFO] [ENV] Target URL: https://bookslot-staging.centerforvein.com/?istestrecord=1
+[2025-04-26 06:59:51,602] [INFO] [OK] Setting up driver directory...
+[2025-04-26 06:59:51,602] [INFO] [OK] Terminating existing Chrome/Chromedriver processes...
+[2025-04-26 06:59:51,897] [INFO] [OK] Chrome/Chromedriver processes terminated.
+[2025-04-26 06:59:51,898] [INFO] [OK] Detecting local Chrome version...
+[2025-04-26 06:59:51,915] [INFO] [OK] Detected local Chrome version: 135.0.7049.115
+[2025-04-26 06:59:51,915] [INFO] [OK] Checking existing ChromeDriver compatibility...
+[2025-04-26 06:59:51,946] [INFO] [OK] Existing ChromeDriver version detected: 135.0.7049.84
+[2025-04-26 06:59:51,946] [INFO] [✓] Reusing existing ChromeDriver 135.0.7049.84 compatible with Chrome 135.0.7049.115
+[2025-04-26 06:59:51,949] [INFO] [OK] Temporary Chrome profile created at C:\Users\LOKEND~1\AppData\Local\Temp\tmpjsu1mrm9
+[2025-04-26 06:59:51,951] [INFO] [OK] Launching Chrome browser with WebDriver...
+[2025-04-26 06:59:59,697] [INFO] ✅ Booking form detected and page DOM stabilized.
+[2025-04-26 07:00:15,235] [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[2025-04-26 07:00:15,247] [INFO] [AI] Page Verification Result:
+Assessment:  
+This looks like a real page intended for appointment booking or patient registration (specifically for a vein center, as indicated by the URL and context provided). The page requests typical patient information (first and last name, email, phone number, ZIP), indicating it's some type of intake or appointment-booking page—definitely not a login screen or a browser/network error.
 
-Confidence score: 9.5/10
-[2025-04-26 06:40:35,538] [INFO] [OK] Browser successfully launched and page loaded.
-[2025-04-26 06:40:35,538] [INFO] [OK] Cleaning up resources...
-[2025-04-26 06:40:35,540] [INFO] [OK] Cleanup completed.
-[2025-04-26 06:40:47,451] [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
-[2025-04-26 06:40:47,453] [INFO] [AI] Run Summary:
+Confidence score: 9.5/10  
+Reasoning:  
+- Typical informational message ("We need to collect some information to get started") implies a legitimate user input step.
+- Clear references to appointment-booking ("Send Me The Code," "Book Appointment") and specific instructions ("zip code," "preferred location") strongly align with a genuine medical appointment intake workflow.
+- No text or context suggests a login page (“send me the code” suggests verification or appointment confirmation flow rather than standard username/password login).
+- The presence of Privacy Policy and Terms of Use at the bottom are consistent with genuine websites handling patient/client information.
+- The instructions and layout structure strongly suggest an authentic data collection form rather than a browser or network-related error message.
+[2025-04-26 07:00:15,293] [INFO] [OK] Browser successfully launched and page loaded.
+[2025-04-26 07:00:15,294] [INFO] [OK] Cleaning up resources...
+[2025-04-26 07:00:15,296] [INFO] [OK] Cleanup completed.
+[2025-04-26 07:00:29,308] [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[2025-04-26 07:00:29,311] [INFO] [AI] Run Summary:
 ### Selenium Log Summary:
-- **Execution Date & Time:** April 26, 2025, at roughly 06:40 AM.
-- **Environment & URL:** Testing on staging environment: `https://bookslot-staging.centerforvein.com/?istestrecord=1`
-- **Chrome and ChromeDriver:**
-  - Local Chrome Version: **135.0.7049.115**
-  - ChromeDriver Version: **135.0.7049.84** (Reported compatible and successfully reused)
-- **AI Page Verification:**
-  - Page identified correctly as a legitimate appointment-booking page.
-  - AI evaluation confidence score high (9.5/10), no suspicious elements detected.
-- **Errors, Issues, or Flaky Behavior Detected:** 
-  - **Nothing suspicious** or **flaky** was reported in this log.
-  - **No timeouts or browser launch errors observed.**
-- **Overall Result:**  
-  ✅ **Successful execution**, page loaded correctly & resources cleaned up successfully.
 
-**Conclusion:** All steps executed smoothly. No issues, timeouts, ChromeDriver anomalies, or flaky behavior identified.
-[2025-04-26 06:40:48,159] [INFO] 🖱️ Hovered over: <label> None
-[2025-04-26 06:40:49,042] [INFO] 🖱️ Hovered over: <input> FirstName
-[2025-04-26 06:40:50,340] [INFO] 🖱️ Hovered over: <input> Email
-[2025-04-26 06:40:51,356] [INFO] 🖱️ Hovered over: <label> None
-[2025-04-26 06:40:52,223] [INFO] 🖱️ Hovered over: <input> Email
-[2025-04-26 06:40:55,876] [INFO] [SAFE] Forcing By.XPATH due to detected XPath pattern: //*[@id="FirstName"]
-[2025-04-26 06:40:55,877] [INFO] [SAFE] Using cleaned locator: //*[@id="FirstName"]
-[2025-04-26 06:40:56,010] [WARNING] [AI] Selector failed: xpath -> //*[@id="FirstName"] | Error: Message: invalid argument: invalid locator
+#### Overview:
+- Selenium test targeting "Book Slot" URL: `https://bookslot-staging.centerforvein.com/?istestrecord=1`
+- Chrome detected at version `135.0.7049.115` and ChromeDriver reused at version `135.0.7049.84` (compatible).
+- Overall execution appears stable.
+
+#### Key Events:
+- Environment and ChromeDriver setup completed successfully.
+- ChromeDriver compatibility check passed. Existing driver version reused.
+- Successfully launched Chrome browser with temporary profile.
+- OpenAI API verification successfully confirmed the authenticity and context of the loaded page with a high confidence (9.5/10).
+- Page loaded and stabilized DOM representation detected successfully.
+
+#### Errors / Issues / Suspicious Behaviors:
+- **None detected**. No errors, timeouts, or exceptions reported.
+- No indications of flaky behavior or suspicious activities in the provided logs.
+
+### Conclusion:
+The Selenium test run executed without any observed errors, ChromeDriver compatibility issues, suspicious activities, or flaky behavior. AI-driven page assessment positively verified the intended application workflow with high confidence.
+[2025-04-26 07:00:30,017] [INFO] 🖱️ Hovered over: <input> FirstName
+[2025-04-26 07:00:31,378] [INFO] 🖱️ Hovered over: <input> FirstName
+[2025-04-26 07:00:32,600] [INFO] 🖱️ Hovered over: <label> None
+[2025-04-26 07:00:33,712] [INFO] 🖱️ Hovered over: <button> 
+[2025-04-26 07:00:34,956] [INFO] 🖱️ Hovered over: <label> None
+[2025-04-26 07:00:38,136] [INFO] [SAFE] Forcing By.XPATH due to detected XPath pattern: //*[@id="FirstName"]
+[2025-04-26 07:00:38,137] [INFO] [SAFE] Using cleaned locator: //*[@id="FirstName"]
+[2025-04-26 07:00:38,151] [INFO] [SMART_FIND] Found normally on attempt 1: //*[@id="FirstName"]
+[2025-04-26 07:00:38,307] [WARNING] [AI] Selector failed: xpath -> //*[@id="FirstName"] | Error: Message: invalid argument: invalid locator
   (Session info: chrome=135.0.7049.115)
 Stacktrace:
 	GetHandleVerifier [0x007180E3+60707]
@@ -72,10 +84,11 @@ Stacktrace:
 	RtlInitializeExceptionChain [0x77CCD0BB+107]
 	RtlGetAppContainerNamedObjectPath [0x77CCD041+561]
 
-[2025-04-26 06:40:56,012] [ERROR] ❌ Failed to interact with a field using AI: ❌ All selector strategies failed.
-[2025-04-26 06:40:56,018] [INFO] [SAFE] Forcing By.XPATH due to detected XPath pattern: //*[@id="FirstName"]
-[2025-04-26 06:40:56,018] [INFO] [SAFE] Using cleaned locator: //*[@id="FirstName"]
-[2025-04-26 06:40:56,082] [WARNING] [AI] Selector failed: xpath -> //*[@id="FirstName"] | Error: Message: invalid argument: invalid locator
+[2025-04-26 07:00:38,309] [ERROR] ❌ Failed to interact with a field using AI: ❌ All selector strategies failed.
+[2025-04-26 07:00:38,318] [INFO] [SAFE] Forcing By.XPATH due to detected XPath pattern: //*[@id="FirstName"]
+[2025-04-26 07:00:38,318] [INFO] [SAFE] Using cleaned locator: //*[@id="FirstName"]
+[2025-04-26 07:00:38,331] [INFO] [SMART_FIND] Found normally on attempt 1: //*[@id="FirstName"]
+[2025-04-26 07:00:38,486] [WARNING] [AI] Selector failed: xpath -> //*[@id="FirstName"] | Error: Message: invalid argument: invalid locator
   (Session info: chrome=135.0.7049.115)
 Stacktrace:
 	GetHandleVerifier [0x007180E3+60707]
@@ -101,5 +114,5 @@ Stacktrace:
 	RtlInitializeExceptionChain [0x77CCD0BB+107]
 	RtlGetAppContainerNamedObjectPath [0x77CCD041+561]
 
-[2025-04-26 06:40:56,082] [ERROR] ❌ Failed during button or interaction click: ❌ All selector strategies failed.
-[2025-04-26 06:40:56,083] [INFO] ⏳ Bookslots Patient Information Page AI Test complete.
+[2025-04-26 07:00:38,487] [ERROR] ❌ Failed during button or interaction click: ❌ All selector strategies failed.
+[2025-04-26 07:00:38,487] [INFO] ⏳ Bookslots Patient Information Page AI Test complete.

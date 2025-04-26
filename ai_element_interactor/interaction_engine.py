@@ -4,8 +4,39 @@ from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.by import By
 from selenium_utils.BrowserUtils.loader_utils import wait_for_loader_to_disappear
 import unicodedata
-import logging
 import time
+import logging
+
+def smart_find_element(driver, by, value, retries=3, wait_between=1):
+    """
+    Find element with retries and Shadow DOM fallback.
+    """
+    for attempt in range(retries):
+        try:
+            element = driver.find_element(by, value)
+            logging.info(f"[SMART_FIND] Found normally on attempt {attempt+1}: {value}")
+            return element
+        except Exception as normal_e:
+            logging.warning(f"[SMART_FIND] Normal find attempt {attempt+1} failed. Trying Shadow DOM fallback... | {normal_e}")
+            try:
+                all_elements = driver.execute_script('return document.querySelectorAll("*")')
+                for root in all_elements:
+                    try:
+                        shadow_root = driver.execute_script('return arguments[0].shadowRoot', root)
+                        if shadow_root:
+                            found = shadow_root.find_element(by, value)
+                            if found:
+                                logging.info(f"[SMART_FIND] Found inside Shadow DOM on attempt {attempt+1}: {value}")
+                                return found
+                    except Exception as inner_shadow_e:
+                        continue
+            except Exception as shadow_e:
+                continue
+
+            # If not found, wait and retry
+            time.sleep(wait_between)
+
+    raise Exception(f"❌ smart_find_element() failed after {retries} retries for: {value}")
 
 def try_selectors(driver, selectors, field_type, input_value=None, label=""):
     by_map = {
@@ -15,7 +46,7 @@ def try_selectors(driver, selectors, field_type, input_value=None, label=""):
         "css": By.CSS_SELECTOR
     }
 
-    # 🔁 Smart fallback: OTP input field
+    # Fallbacks for OTP or Verify
     if label.lower() in ["code", "otp", "verify otp"] and field_type == "textbox":
         try:
             otp_input = driver.find_element(By.CSS_SELECTOR, "input.otp-field")
@@ -29,7 +60,6 @@ def try_selectors(driver, selectors, field_type, input_value=None, label=""):
         except Exception as e:
             logging.warning(f"[FALLBACK] OTP field fallback failed: {e}")
 
-    # 🔁 Smart fallback: Verify Code button
     if label.lower() == "verify code" and field_type == "click":
         try:
             button = driver.find_element(By.XPATH, "//button[normalize-space()='Verify Code']")
@@ -42,14 +72,13 @@ def try_selectors(driver, selectors, field_type, input_value=None, label=""):
         except Exception as e:
             logging.warning(f"[FALLBACK] Verify Code fallback failed: {e}")
 
-    # 🧠 Try all AI-recommended selectors
+    # Try all selectors
     for selector_type, selector_value, score in selectors:
         try:
             if not selector_type or not selector_value:
                 logging.warning(f"[AI] Skipping bad selector: {selector_type} -> {selector_value}")
                 continue
 
-            # 🚨 Validate XPath
             if selector_type.lower() == "xpath" and not selector_value.strip().startswith(("/", "//")):
                 logging.warning(f"[AI] Skipping invalid XPath: {selector_value}")
                 continue
@@ -58,31 +87,20 @@ def try_selectors(driver, selectors, field_type, input_value=None, label=""):
                 logging.warning(f"[AI] Unknown selector type: {selector_type}")
                 continue
 
-            # 🚀 Force correction: If locator looks like XPath but by_type is wrong
             if selector_value.strip().startswith(("/", "//")):
                 logging.info(f"[SAFE] Forcing By.XPATH due to detected XPath pattern: {selector_value}")
                 by_used = By.XPATH
             else:
                 by_used = by_map[selector_type.lower()]
 
-            # 🚿 Sanitize locator
+            # Clean the locator
             selector_value = selector_value.strip()
             selector_value = selector_value.replace('\n', '').replace('\t', '').replace('\r', '')
             selector_value = unicodedata.normalize("NFKC", selector_value)
             logging.info(f"[SAFE] Using cleaned locator: {selector_value}")
 
-            # 🔁 Retry mechanism
-            retry_attempts = 3
-            for attempt in range(retry_attempts):
-                try:
-                    element = driver.find_element(by_used, selector_value)
-                    break  # ✅ Success
-                except Exception as e_inner:
-                    if attempt < retry_attempts - 1:
-                        logging.warning(f"[RETRY] Selector attempt {attempt+1} failed, retrying after 1s... | {e_inner}")
-                        time.sleep(1)
-                    else:
-                        raise e_inner
+            time.sleep(0.5)  # slight wait for stability
+            element = smart_find_element(driver, by_used, selector_value)  # 🛠 re-fetch fresh
 
             if field_type == "textbox":
                 element.clear()
@@ -92,7 +110,6 @@ def try_selectors(driver, selectors, field_type, input_value=None, label=""):
             elif field_type == "click":
                 element.click()
 
-            # 🚀 Wait for loader after interaction
             wait_for_loader_to_disappear(driver)
 
             return {
