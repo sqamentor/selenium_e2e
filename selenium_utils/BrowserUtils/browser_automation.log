@@ -1,79 +1,110 @@
-[2025-04-25 19:12:03,178] [INFO] [OK]-[LOGGING] Writing logs to: C:\Users\LokendraSingh\selenium_e2e\selenium_utils\BrowserUtils\browser_automation.log
-[2025-04-25 19:12:03,183] [INFO] [OK]-[LOGGING] Writing logs to: C:\Users\LokendraSingh\selenium_e2e\pages\Bookslot_info_otp_page_ai.log
-[2025-04-25 19:12:03,183] [INFO] 🚀 Starting AI-driven UI interaction with Book Slot page...
-[2025-04-25 19:12:03,183] [INFO] [ENV] Target URL: https://bookslot-staging.centerforvein.com/?istestrecord=1
-[2025-04-25 19:12:03,184] [INFO] [OK] Setting up driver directory...
-[2025-04-25 19:12:03,185] [INFO] [OK] Terminating existing Chrome/Chromedriver processes...
-[2025-04-25 19:12:03,518] [INFO] [OK] Chrome/Chromedriver processes terminated.
-[2025-04-25 19:12:03,518] [INFO] [OK] Detecting local Chrome version...
-[2025-04-25 19:12:03,535] [INFO] [OK] Detected local Chrome version: 135.0.7049.115
-[2025-04-25 19:12:03,535] [INFO] [OK] Checking existing ChromeDriver compatibility...
-[2025-04-25 19:12:03,585] [INFO] [OK] Existing ChromeDriver version detected: 135.0.7049.84
-[2025-04-25 19:12:03,585] [INFO] [✓] Reusing existing ChromeDriver 135.0.7049.84 compatible with Chrome 135.0.7049.115
-[2025-04-25 19:12:03,588] [INFO] [OK] Temporary Chrome profile created at C:\Users\LOKEND~1\AppData\Local\Temp\tmpyxw_42vc
-[2025-04-25 19:12:03,590] [INFO] [OK] Launching Chrome browser with WebDriver...
-[2025-04-25 19:12:16,692] [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
-[2025-04-25 19:12:16,705] [INFO] [AI] Page Verification Result:
-This looks like a real page. It contains typical page elements you would expect—language selection (English & Spanish options), a phone number, and links such as Privacy Policy and Terms of Use. The presence of navigation and footer elements strongly suggests that this is a real webpage, likely an appointment booking or landing page rather than a login screen or browser/network error.
+[2025-04-26 05:56:55,690] [INFO] [OK]-[LOGGING] Writing logs to: C:\Users\LokendraSingh\selenium_e2e\selenium_utils\BrowserUtils\browser_automation.log
+[2025-04-26 05:56:55,693] [INFO] [OK]-[LOGGING] Writing logs to: C:\Users\LokendraSingh\selenium_e2e\pages\Bookslot_info_otp_page_ai.log
+[2025-04-26 05:56:55,693] [INFO] 🚀 Starting AI-driven UI interaction with Book Slot page...
+[2025-04-26 05:56:55,693] [INFO] [ENV] Target URL: https://bookslot-staging.centerforvein.com/?istestrecord=1
+[2025-04-26 05:56:55,694] [INFO] [OK] Setting up driver directory...
+[2025-04-26 05:56:55,694] [INFO] [OK] Terminating existing Chrome/Chromedriver processes...
+[2025-04-26 05:56:55,955] [INFO] [OK] Chrome/Chromedriver processes terminated.
+[2025-04-26 05:56:55,956] [INFO] [OK] Detecting local Chrome version...
+[2025-04-26 05:56:55,968] [INFO] [OK] Detected local Chrome version: 135.0.7049.115
+[2025-04-26 05:56:55,968] [INFO] [OK] Checking existing ChromeDriver compatibility...
+[2025-04-26 05:56:56,004] [INFO] [OK] Existing ChromeDriver version detected: 135.0.7049.84
+[2025-04-26 05:56:56,004] [INFO] [✓] Reusing existing ChromeDriver 135.0.7049.84 compatible with Chrome 135.0.7049.115
+[2025-04-26 05:56:56,028] [INFO] [OK] Temporary Chrome profile created at C:\Users\LOKEND~1\AppData\Local\Temp\tmpw2yo0_wp
+[2025-04-26 05:56:56,030] [INFO] [OK] Launching Chrome browser with WebDriver...
+[2025-04-26 05:57:07,834] [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[2025-04-26 05:57:07,843] [INFO] [AI] Page Verification Result:
+This looks like a real web page rather than a login screen or browser/network error. It contains elements commonly found in real web pages, such as contact details, language selection (English/Spanish), and links for standard items like privacy policy and terms of use. The presence of the text "Book Appointment" also indicates it's primarily an appointment-booking page and not an error page or login prompt.
 
-Confidence Score: 9/10
-[2025-04-25 19:12:16,782] [INFO] [OK] Browser successfully launched and page loaded.
-[2025-04-25 19:12:16,782] [INFO] [OK] Cleaning up resources...
-[2025-04-25 19:12:16,784] [INFO] [OK] Cleanup completed.
-[2025-04-25 19:12:34,520] [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
-[2025-04-25 19:12:34,532] [INFO] [AI] Run Summary:
-### Selenium Log Summary:
+Confidence score: 9 out of 10
+[2025-04-26 05:57:07,886] [INFO] [OK] Browser successfully launched and page loaded.
+[2025-04-26 05:57:07,886] [INFO] [OK] Cleaning up resources...
+[2025-04-26 05:57:07,888] [INFO] [OK] Cleanup completed.
+[2025-04-26 05:57:23,692] [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[2025-04-26 05:57:23,698] [INFO] [AI] Run Summary:
+## Selenium Log Summary:
 
-#### General Overview:
-- Automated test run started at `2025-04-25 19:12:03`.
-- Target URL under test: `https://bookslot-staging.centerforvein.com/?istestrecord=1`.
-- Browser: Chrome, Version detected: `135.0.7049.115`.
-- ChromeDriver used: `135.0.7049.84` (Compatible version reused successfully).
+### General Overview:
+- Successfully initiated test execution and logging setup.
+- Chrome browser launched successfully with ChromeDriver.
 
-#### AI Verification checks:
-- The AI analysis confirms that the "Book Slot" page is genuine and not an error or login page.
-- Confidence score provided by AI: high (`9/10`).
+### ChromeDriver / Browser Info:
+- Detected Chrome version: **135.0.7049.115**
+- Existing ChromeDriver version: **135.0.7049.84** considered compatible and reused.
 
-#### Errors, Warnings, or Issues:
-- **No errors**, exceptions, timeouts, or suspicious activities detected in provided logs.
-- No ChromeDriver compatibility or interaction issues found.
-- Chrome and ChromeDriver were terminated cleanly and restarted successfully before test execution ensuring no prior running instances cause flakiness.
+### API / AI Verification:
+- AI verified page as authentic and properly loaded, assigning a high confidence (9 out of 10) score.
 
-#### Observations on Suspicious/Flaky Behaviors:
-- **None identified**. The logs suggest stable execution and clean resource management.
+### Issues & Errors:
+- **No critical errors**, exceptions, or obvious abnormal behaviors reported in the given logs.
+- **No timeouts or flakiness** reported or evident.
 
-#### Conclusion:
-✅ **Test execution appears successful and stable with no evident issues or flaky behaviors.**
-[2025-04-25 19:12:35,305] [INFO] 🖱️ Hovered over: <a> 
-[2025-04-25 19:12:36,252] [INFO] 🖱️ Hovered over: <button> 
-[2025-04-25 19:12:37,645] [INFO] 🖱️ Hovered over: <label> None
-[2025-04-25 19:12:39,046] [INFO] 🖱️ Hovered over: <button> 
-[2025-04-25 19:12:39,914] [INFO] 🖱️ Hovered over: <button> 
-[2025-04-25 19:12:44,294] [ERROR] ❌ Failed during button or interaction click: Message: invalid argument: invalid locator
+### Resource Cleanup:
+- Cleanup process executed successfully without issues.
+
+### Recommendation:
+- Continue regular monitoring to detect any intermittencies or potential ChromeDriver mismatches. Currently, the minor version difference (**7049.84 vs. 7049.115**) caused no issues, but keep monitoring as ChromeDriver updates might be required in future.
+
+### Conclusion:
+- ✅ Tests passed cleanly.
+- ⚠️ No immediate suspicious, flaky behaviors or errors observed.
+[2025-04-26 05:57:24,471] [INFO] 🖱️ Hovered over: <label> None
+[2025-04-26 05:57:25,650] [INFO] 🖱️ Hovered over: <label> None
+[2025-04-26 05:57:26,759] [INFO] 🖱️ Hovered over: <label> None
+[2025-04-26 05:57:28,154] [INFO] 🖱️ Hovered over: <a> 
+[2025-04-26 05:57:29,237] [INFO] 🖱️ Hovered over: <label> None
+[2025-04-26 05:57:33,501] [WARNING] [AI] Selector failed: xpath -> //*[@id="FirstName"] | Error: Message: invalid argument: invalid locator
   (Session info: chrome=135.0.7049.115)
 Stacktrace:
-	GetHandleVerifier [0x006B80E3+60707]
-	GetHandleVerifier [0x006B8124+60772]
-	(No symbol) [0x004E0683]
-	(No symbol) [0x0052819B]
-	(No symbol) [0x005289FB]
-	(No symbol) [0x00571022]
-	(No symbol) [0x0054D094]
-	(No symbol) [0x0056E824]
-	(No symbol) [0x0054CE46]
-	(No symbol) [0x0051C5D3]
-	(No symbol) [0x0051D424]
-	GetHandleVerifier [0x008FBBC3+2435075]
-	GetHandleVerifier [0x008F7163+2416035]
-	GetHandleVerifier [0x0091350C+2531660]
-	GetHandleVerifier [0x006CF1B5+155125]
-	GetHandleVerifier [0x006D5B5D+182173]
-	GetHandleVerifier [0x006BF9B8+91640]
-	GetHandleVerifier [0x006BFB60+92064]
-	GetHandleVerifier [0x006AA620+4704]
-	BaseThreadInitThunk [0x75A35D49+25]
-	RtlInitializeExceptionChain [0x7769D09B+107]
-	RtlGetAppContainerNamedObjectPath [0x7769D021+561]
+	GetHandleVerifier [0x007180E3+60707]
+	GetHandleVerifier [0x00718124+60772]
+	(No symbol) [0x00540683]
+	(No symbol) [0x0058819B]
+	(No symbol) [0x005889FB]
+	(No symbol) [0x005D1022]
+	(No symbol) [0x005AD094]
+	(No symbol) [0x005CE824]
+	(No symbol) [0x005ACE46]
+	(No symbol) [0x0057C5D3]
+	(No symbol) [0x0057D424]
+	GetHandleVerifier [0x0095BBC3+2435075]
+	GetHandleVerifier [0x00957163+2416035]
+	GetHandleVerifier [0x0097350C+2531660]
+	GetHandleVerifier [0x0072F1B5+155125]
+	GetHandleVerifier [0x00735B5D+182173]
+	GetHandleVerifier [0x0071F9B8+91640]
+	GetHandleVerifier [0x0071FB60+92064]
+	GetHandleVerifier [0x0070A620+4704]
+	BaseThreadInitThunk [0x757D5D49+25]
+	RtlInitializeExceptionChain [0x77CCD0BB+107]
+	RtlGetAppContainerNamedObjectPath [0x77CCD041+561]
 
-[2025-04-25 19:12:44,296] [INFO] ⏳ Bookslots Patient Information Page AI Test complete.
-[2025-04-25 19:13:13,014] [INFO] 🧹 Session ended.
+[2025-04-26 05:57:33,502] [ERROR] ❌ Failed to interact with a field using AI: ❌ All selector strategies failed.
+[2025-04-26 05:57:33,599] [WARNING] [AI] Selector failed: xpath -> //*[@id="FirstName"] | Error: Message: invalid argument: invalid locator
+  (Session info: chrome=135.0.7049.115)
+Stacktrace:
+	GetHandleVerifier [0x007180E3+60707]
+	GetHandleVerifier [0x00718124+60772]
+	(No symbol) [0x00540683]
+	(No symbol) [0x0058819B]
+	(No symbol) [0x005889FB]
+	(No symbol) [0x005D1022]
+	(No symbol) [0x005AD094]
+	(No symbol) [0x005CE824]
+	(No symbol) [0x005ACE46]
+	(No symbol) [0x0057C5D3]
+	(No symbol) [0x0057D424]
+	GetHandleVerifier [0x0095BBC3+2435075]
+	GetHandleVerifier [0x00957163+2416035]
+	GetHandleVerifier [0x0097350C+2531660]
+	GetHandleVerifier [0x0072F1B5+155125]
+	GetHandleVerifier [0x00735B5D+182173]
+	GetHandleVerifier [0x0071F9B8+91640]
+	GetHandleVerifier [0x0071FB60+92064]
+	GetHandleVerifier [0x0070A620+4704]
+	BaseThreadInitThunk [0x757D5D49+25]
+	RtlInitializeExceptionChain [0x77CCD0BB+107]
+	RtlGetAppContainerNamedObjectPath [0x77CCD041+561]
+
+[2025-04-26 05:57:33,599] [ERROR] ❌ Failed during button or interaction click: ❌ All selector strategies failed.
+[2025-04-26 05:57:33,599] [INFO] ⏳ Bookslots Patient Information Page AI Test complete.

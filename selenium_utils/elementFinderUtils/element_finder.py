@@ -10,6 +10,7 @@ import logging
 import pathlib
 import os
 import time
+from selenium_utils.BrowserUtils.loader_utils import wait_for_loader_to_disappear
 
 # ------------------------- Setup Logging -------------------------
 # ✅ Step 1: Define the directory and log file path
@@ -62,13 +63,20 @@ class ElementFinder:
                 return elements
             if clickable:
                 logging.info(f"🔍 Finding clickable element: {by_locator}")
-                element = wait.until(EC.element_to_be_clickable(by_locator))
+                #element = wait.until(EC.element_to_be_clickable(by_locator))
+                element = wait.until(EC.element_to_be_clickable((getattr(By, locator_type.upper()), locator_value)))
             elif visible:
                 logging.info(f"🔍 Finding visible element: {by_locator}")
-                element = wait.until(EC.visibility_of_element_located(by_locator))
+                #element = wait.until(EC.visibility_of_element_located(by_locator))
+                element = wait.until(EC.visibility_of_element_located((getattr(By, locator_type.upper()), locator_value)))
             else:
                 logging.info(f"🔍 Finding present element (not necessarily visible): {by_locator}")
-                element = wait.until(EC.presence_of_element_located(by_locator))
+                #element = wait.until(EC.presence_of_element_located(by_locator))
+                element = wait.until(EC.presence_of_element_located((getattr(By, locator_type.upper()), locator_value)))
+            logging.info(f"✅ Found element [{locator_type}] {locator_value}")
+
+            # 🚀 After finding, wait for any loaders to disappear
+            wait_for_loader_to_disappear(self.driver)
 
             self.highlight(element)
             return element
