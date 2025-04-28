@@ -20,6 +20,9 @@ from selenium.common.exceptions import NoSuchElementException, ElementNotInterac
 from selenium_utils.BrowserUtils.loader_utils import wait_for_loader_to_disappear
 from utils.human_actions import simulate_typing
 from selenium_utils.elementFinderUtils.element_finder import smart_find_element
+from selenium.webdriver.common.by import By
+from selenium_utils.BrowserUtils.element_wait_utils import wait_for_element_to_be_enabled
+from selenium_utils.BrowserUtils.element_action_utils import retry_click_element
 
 def try_selectors(driver, selectors, field_type, input_value=None, label=""):
     by_map = {
@@ -33,65 +36,53 @@ def try_selectors(driver, selectors, field_type, input_value=None, label=""):
         "code", "otp", "verify otp", "verification code", "verification", "otp code", "verify code"
     ]
 
-    # OTP field special handling
+    # OTP fallback for 'Code' field
     if label.lower().strip() in otp_related_labels and field_type == "textbox":
-        logging.info("[SAFE] Trying special OTP field fallback: input.otp-field")
+        logging.info("[SAFE] Trying special OTP field fallback: CSS input.otp-field")
 
+        # Fallback to input.otp-field
         try:
             otp_inputs = driver.find_elements(By.CSS_SELECTOR, "input.otp-field")
             for otp_input in otp_inputs:
                 if otp_input.is_displayed() and otp_input.is_enabled():
                     otp_input.clear()
+                    simulate_typing(otp_input, input_value)
+                    time.sleep(0.5)
+                    # 🚀 Smart retry typing fallback
                     try:
-                        simulate_typing(otp_input, input_value)
                         otp_input.send_keys(input_value)
-                        logging.info("✅ [SAFE] OTP field entered using simulate_typing and send_keys")
-                    except Exception as typing_error:
-                        logging.warning(f"[SAFE] Typing OTP failed, retrying after 1 second: {typing_error}")
+                    except Exception as typing_exception:
+                        logging.warning(f"[SAFE] Typing failed first attempt: {typing_exception}. Retrying...")
                         time.sleep(1)
-                        otp_input = driver.find_element(By.CSS_SELECTOR, "input.otp-field")
-                        otp_input.clear()
                         otp_input.send_keys(input_value)
-                        logging.info("✅ [SAFE] OTP field typed successfully after retry")
 
+                    driver.execute_script("arguments[0].value = arguments[1];", otp_input, input_value)
+                    logging.info("✅ [FALLBACK] Entered OTP into input.otp-field (dynamic input)")
                     return {
                         "element": otp_input,
                         "selector": {"type": "css", "value": "input.otp-field", "score": 1.0}
                     }
         except Exception as e:
-            logging.warning(f"[SAFE] OTP fallback typing failed: {e}")
+            logging.warning(f"[SAFE] OTP field fallback failed: {e}")
 
-    # Verify Code button special handling
+    # Special case fallback for Verify Code button
     if label.lower().strip() == "verify code" and field_type == "click":
-        logging.info("[SAFE] Trying special Verify Code fallback...")
-
         try:
-            wait = WebDriverWait(driver, 10)
-            verify_btn = wait.until(EC.presence_of_element_located((By.XPATH, "//button[contains(text(),'Verify Code')]")))
 
-            if verify_btn and not verify_btn.is_enabled():
-                logging.warning("[SAFE] Verify Code button detected but DISABLED! Waiting for enable...")
-                wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(),'Verify Code')]")))
-                logging.info("[SAFE] Button is now clickable ✅")
-
-            # Try clicking
-            try:
-                verify_btn.click()
-                logging.info("✅ [SAFE] 'Verify Code' button clicked successfully on first attempt")
-            except Exception as first_click_error:
-                logging.warning(f"[SAFE] First click failed, retrying: {first_click_error}")
-                time.sleep(1)
-                verify_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(),'Verify Code')]")))
-                verify_btn.click()
-                logging.info("✅ [SAFE] 'Verify Code' button clicked successfully after retry")
-
+            logging.info("[SAFE] Waiting for Verify Code button to become clickable...")
+            verify_button = wait_for_element_to_be_enabled(driver, By.XPATH, "//button[contains(text(),'Verify Code')]")
+            
+            logging.info("[SAFE] Trying to click Verify Code button with retry...")
+            retry_click_element(driver, By.XPATH, "//button[contains(text(),'Verify Code')]")
+            
+            logging.info("✅ [FALLBACK] 'Verify Code' button clicked successfully after retries")
             return {
-                "element": verify_btn,
+                "element": verify_button,
                 "selector": {"type": "xpath", "value": "//button[contains(text(),'Verify Code')]", "score": 1.0}
             }
-
         except Exception as e:
-            logging.warning(f"[SAFE] Verify Code fallback failed even after retry: {e}")
+            logging.warning(f"[SAFE] Verify Code fallback failed: {e}")
+
 
     # Normal flow through selectors
     for selector_type, selector_value, score in selectors:
