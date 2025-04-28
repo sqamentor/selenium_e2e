@@ -76,6 +76,14 @@ def try_selectors(driver, selectors, field_type, input_value=None, label=""):
                     driver.execute_script("arguments[0].value = arguments[1];", otp_input, input_value)
                     otp_input.send_keys(input_value)
                     logging.info("✅ [FALLBACK] Entered OTP into input.otp-field (dynamic input)")
+                    # ✅ NEW: Wait for Verify button to become clickable after typing
+                    try:
+                        wait = WebDriverWait(driver, 10)
+                        verify_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(),'Verify Code')]")))
+                        logging.info("✅ [FALLBACK] 'Verify Code' button now enabled.")
+                    except Exception as wait_err:
+                        logging.warning(f"[FALLBACK] Verify button not enabled in time: {wait_err}")
+
                     return {
                         "element": otp_input,
                         "selector": {"type": "css", "value": "input.otp-field", "score": 1.0}
@@ -85,6 +93,7 @@ def try_selectors(driver, selectors, field_type, input_value=None, label=""):
 
     # ✅ FIXED: Correctly check button click when label = verify code
     if label.lower().strip() == "verify code" and field_type == "click":
+        logging.info("[SAFE] Attempting to click Verify Code button after OTP input...")
         try:
             wait = WebDriverWait(driver, 10)
             verify_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(),'Verify Code')]")))
