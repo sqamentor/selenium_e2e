@@ -57,7 +57,7 @@ Only return the index (number). Do NOT return text or explanation.
 
     try:
         response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4.5-preview",
             messages=[{"role": "user", "content": prompt}]
         )
         answer = response.choices[0].message.content.strip()
