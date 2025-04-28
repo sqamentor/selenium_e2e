@@ -7,6 +7,8 @@ from utils.human_actions import simulate_typing
 import logging
 import unicodedata
 import time
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 def smart_find_element(driver, by, value, retries=3, wait_between=1):
     for attempt in range(retries):
@@ -62,17 +64,18 @@ def try_selectors(driver, selectors, field_type, input_value=None, label=""):
         "code", "otp", "verify otp", "verification code", "verification", "otp code", "verify code"
     ]
 
-    if label.lower().strip() in otp_related_labels:
-        logging.info("[SAFE] Detected OTP/Verify Code context - Activating OTP fallback handling...")
-
-        # Fallback to input.otp-field
+    # ✅ FIXED: Previously OTP fallback 'verify code' check was inside textbox block - moved outside correctly
+    if label.lower().strip() in otp_related_labels and field_type == "textbox":
+        logging.info("[SAFE] Trying special OTP field fallback: CSS input.otp-field")
         try:
             otp_inputs = driver.find_elements(By.CSS_SELECTOR, "input.otp-field")
             for otp_input in otp_inputs:
                 if otp_input.is_displayed() and otp_input.is_enabled():
                     otp_input.clear()
-                    simulate_typing(otp_input, input_value)  # Slow human typing effect
-                    logging.info("✅ [FALLBACK] Successfully entered OTP into input.otp-field.")
+                    simulate_typing(otp_input, input_value)
+                    driver.execute_script("arguments[0].value = arguments[1];", otp_input, input_value)
+                    otp_input.send_keys(input_value)
+                    logging.info("✅ [FALLBACK] Entered OTP into input.otp-field (dynamic input)")
                     return {
                         "element": otp_input,
                         "selector": {"type": "css", "value": "input.otp-field", "score": 1.0}
@@ -80,18 +83,19 @@ def try_selectors(driver, selectors, field_type, input_value=None, label=""):
         except Exception as e:
             logging.warning(f"[SAFE] OTP field fallback failed: {e}")
 
-        # Fallback to Verify Code button click
+    # ✅ FIXED: Correctly check button click when label = verify code
+    if label.lower().strip() == "verify code" and field_type == "click":
         try:
-            verify_code_button = driver.find_element(By.XPATH, "//button[contains(translate(text(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'verify code')]")
-            verify_code_button.click()
-            logging.info("✅ [FALLBACK] Clicked 'Verify Code' button successfully.")
+            wait = WebDriverWait(driver, 10)
+            verify_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(),'Verify Code')]")))
+            verify_btn.click()
+            logging.info("✅ [FALLBACK] 'Verify Code' button clicked via fallback after enabled check")
             return {
-                "element": verify_code_button,
-                "selector": {"type": "xpath", "value": "//button[contains(translate(text(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'verify code')]", "score": 1.0}
+                "element": verify_btn,
+                "selector": {"type": "xpath", "value": "//button[contains(text(),'Verify Code')]", "score": 1.0}
             }
         except Exception as e:
-            logging.warning(f"[SAFE] Verify Code button fallback failed: {e}")
-
+            logging.warning(f"[FALLBACK] Verify Code fallback failed: {e}")
 
     for selector_type, selector_value, score in selectors:
         try:
@@ -121,7 +125,6 @@ def try_selectors(driver, selectors, field_type, input_value=None, label=""):
 
             if field_type == "textbox":
                 element.clear()
-                #simulate_typing(element, input_value)
                 element.send_keys(input_value)
             elif field_type == "dropdown":
                 Select(element).select_by_visible_text(input_value)
