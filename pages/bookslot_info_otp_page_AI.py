@@ -78,6 +78,17 @@ try:
     interact_by_label(driver, label="Send Me The Code", field_type="click")
     # Correct OTP Input
     wait_for_loader_to_disappear(driver)
+    # ⏳ Wait for OTP Field to appear after sending OTP
+    try:
+        logging.info("[WAIT] Waiting for OTP input field to become available after sending code...")
+        wait = WebDriverWait(driver, 15)  # Give generous time for slower systems
+        otp_field = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "input.otp-field")))
+        wait.until(EC.visibility_of(otp_field))
+        logging.info("[WAIT] OTP input field is now visible and ready for typing.")
+    except Exception as e:
+        logging.error(f"[WAIT] OTP field did not appear in time: {e}")
+        raise Exception("❌ OTP field did not load after sending code")
+
     interact_by_label(driver, label="Code", field_type="textbox", value="123456")
     # Then explicitly click the button
     interact_by_label(driver, label="Verify Code", field_type="click")
