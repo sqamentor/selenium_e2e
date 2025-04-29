@@ -40,7 +40,7 @@ logging.info(f"[OK]-[LOGGING] Writing logs to: {LOG_FILE_PATH}")
 # ------------------------------------------------------------------------------------------------------------
 # UI Component: Book Slot Page (Center for Vein Restoration)
 logging.info("🚀 Starting UI interaction with Book Slot page...")
-target_url = os.getenv("TARGET_URL")
+target_url = imports["getenv"]("TARGET_URL")
 driver = run_chrome_automation(target_url)
 finder = ElementFinder(driver)
 
@@ -49,7 +49,7 @@ random_mouse_movement(driver)
 human_scroll(driver)
 
 class BookslotInfoOtpPage:
-    def __init__(self, driver, simulate_human_behavior, timeout: int = 20):
+    def __init__(self, driver, simulate_human_behavior:bool, timeout: int = 20):
         self.driver = driver
         self.simulated = simulate_human_behavior  # triggers on instantiation
         self.finder = ElementFinder(driver)

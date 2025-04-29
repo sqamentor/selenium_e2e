@@ -103,12 +103,15 @@ def bulk_safe_imports(imports_dict, retries=3, delay=2):
     return imported_objects
 
 
+
+
 # 🔹 Centralized import definitions
 imports_needed = {
     # Standard Library
     "time": "time",
     "pathlib": "pathlib",
     "logging": "logging",
+    "getenv": "os.getenv", 
 
     # Selenium Imports
     "webdriver": "selenium.webdriver",
@@ -136,6 +139,10 @@ imports_needed = {
     "random_mouse_movement": "utils.human_actions.random_mouse_movement",
     "run_chrome_automation": "selenium_utils.BrowserUtils.chrome_automation_launcher.run_chrome_automation",
     "ElementFinder": "selenium_utils.elementFinderUtils.element_finder.ElementFinder",
+
+    #Environement Variable load 
+    "load_dotenv": "dotenv.load_dotenv",
+
 }
 
 
@@ -144,3 +151,9 @@ logging.info("\n🚀 Starting dynamic imports with retry logic...")
 imports = bulk_safe_imports(imports_needed, retries=3, delay=2)
 logging.info("✅ Dynamic imports with retry completed.\n")
 
+# 🔹 Automatically load .env file
+if imports.get("load_dotenv"):
+    imports["load_dotenv"]()
+    logging.info("✅ .env file loaded successfully.")
+else:
+    logging.warning("⚠️ load_dotenv not available; .env variables were not loaded.")
