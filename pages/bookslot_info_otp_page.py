@@ -15,6 +15,7 @@ By = imports['By']
 Keys = imports['Keys']
 TimeoutException = imports['TimeoutException']
 NoSuchElementException = imports['NoSuchElementException']
+WebDriverWait = imports['WebDriverWait']
 EC = imports['EC']  # ✅ Only if EC is fixed as shown earlier
 
 from dotenv import load_dotenv
@@ -174,7 +175,7 @@ if __name__ == "__main__":
     random_mouse_movement(driver)
     human_scroll(driver)
 
-    form = BookslotInfoOtpPage(driver)
+    form = BookslotInfoOtpPage(driver, simulate_human_behavior=True)
     form.enter_first_name("Lokendra")
     form.enter_last_name("Singh")
     form.enter_email("lokendra.singh@abjima.com")
@@ -187,5 +188,5 @@ if __name__ == "__main__":
 
     logging.info("⏳ Bookslots Patient Information Page Test complete. Inspect form state.")
     input("Press Enter to quit...")
-    driver.quit()
-    logging.info("🧹 Session ended.")
+    #driver.quit()
+    #logging.info("🧹 Session ended.")
