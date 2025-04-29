@@ -18,6 +18,23 @@ import logging
 import time
 import os
 import sys
+from dotenv import load_dotenv
+
+load_dotenv()
+EXECUTION_MODE = os.getenv("EXECUTION_MODE", "manual")
+
+imports = {}
+
+if EXECUTION_MODE == "manual":
+    from manual_execution.pages import bookslot_info_otp_page as manual_page
+    imports['BookslotPage'] = manual_page.BookslotInfoOtpPage
+    # Add other manual imports
+elif EXECUTION_MODE == "ai":
+    from ai_execution.pages import bookslot_info_otp_page as ai_page
+    imports['BookslotPage'] = ai_page.BookslotInfoOtpPage
+    # Add other AI imports
+else:
+    raise ValueError(f"Invalid EXECUTION_MODE: {EXECUTION_MODE}")
 
 # 🔹 Configure Logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
