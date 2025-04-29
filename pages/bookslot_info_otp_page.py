@@ -1,61 +1,24 @@
-# 🔹 Standard Library
-# 🚀 Bootstraps project root to sys.path so all modules like `utils` are accessible
-import os, sys
-current_file = os.path.abspath(__file__)
-project_root = os.path.abspath(os.path.join(current_file, "..", ".."))  # Go up 2 levels
-if project_root not in sys.path:
-    sys.path.insert(0, project_root)
-from utils.path_initializer import ensure_project_root_in_sys_path
-ensure_project_root_in_sys_path(relative_levels_up=2)
+import sys, os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-# 🔹 Standard Library
-import time
 import pathlib
 import logging
+from imports_manager import imports
+# Assign dynamic imports to local variables
+run_chrome_automation = imports['run_chrome_automation']
+ElementFinder = imports['ElementFinder']
+simulate_typing = imports['simulate_typing']
+human_scroll = imports['human_scroll']
+random_mouse_movement = imports['random_mouse_movement']
+WebDriverWait = imports['WebDriverWait']
+By = imports['By']
+Keys = imports['Keys']
+TimeoutException = imports['TimeoutException']
+NoSuchElementException = imports['NoSuchElementException']
+EC = imports['EC']  # ✅ Only if EC is fixed as shown earlier
 
-# 🔹 Third-Party: Selenium
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import (
-    TimeoutException,
-    NoSuchElementException,
-    ElementClickInterceptedException,
-    ElementNotInteractableException
-)
-from selenium.webdriver.remote.webdriver import WebDriver
-from selenium.webdriver.remote.webelement import WebElement
-
-
-# 👇 Go up 3 levels from TestScript.py to reach AutomationUtilities
-
-
-# Try importing
-try:
-    # ✅ Now you can import utils correctly
-    from utils.human_actions import simulate_typing, human_scroll, random_mouse_movement
-    print("\n✅ Import of human_action successful!")
-except ModuleNotFoundError as e:
-    print("\n❌ Import failed:", e)
-    print("👉 Double check the path and file name.")
-try:
-    from selenium_utils.BrowserUtils.chrome_automation_launcher import run_chrome_automation
-    print("\n✅ Import of chrome_automation_launchersuccessful!")
-except ModuleNotFoundError as e:
-    print("\n❌ Import failed:", e)
-    print("👉 Double check the path and file name.")
-
-try:
-    from selenium_utils.elementFinderUtils.element_finder import ElementFinder
-    print("\n✅ Import of element_finder successful!")
-except ModuleNotFoundError as e:
-    print("\n❌ Import failed:", e)
-    print("👉 Double check the path and file name.")
+from dotenv import load_dotenv
+load_dotenv()
 
 # ------------------------- Setup Logging ------------------------------------------------------------------------------------------------
 #Define the directory and log file path
@@ -79,7 +42,6 @@ logging.info(f"[OK]-[LOGGING] Writing logs to: {LOG_FILE_PATH}")
 logging.info("🚀 Starting UI interaction with Book Slot page...")
 target_url = os.getenv("TARGET_URL")
 driver = run_chrome_automation(target_url)
-driver = run_chrome_automation()
 finder = ElementFinder(driver)
 
 # simulate human-like behavior

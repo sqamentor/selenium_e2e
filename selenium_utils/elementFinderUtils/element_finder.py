@@ -57,7 +57,7 @@ class ElementFinder:
     def find(self, by_type, locator, visible=False, clickable=False):
         try:
             # 🚨 Validation before usage
-            if by_type.lower() == "xpath" and (not locator.strip().startswith(("/", "//"))) or "None" in locator or "undefined" in locator
+            if by_type.lower() == "xpath" and (not locator.strip().startswith(("/", "//"))) or "None" in locator or "undefined" in locator:
                 logging.error(f"❌ Invalid XPath locator skipped: {locator}")
                 return None
             if not locator.strip():
