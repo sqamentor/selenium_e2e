@@ -23,3 +23,6 @@ flake8
 black
 pytesseract
 Pillow
+pytest-allure-adaptor
+
+

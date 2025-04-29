@@ -1,18 +1,20 @@
 """
 imports_manager.py
 -------------------
-
 Centralized dynamic import manager with retry logic for robust Selenium-Pytest automation.
 
 - Dynamically imports modules/attributes.
 - Provides safe imports with detailed logging.
 - Automatically retries failed imports (up to 3 attempts).
+- Detects execution mode (manual / ai) and imports accordingly.
 
 Author: Your Name
 Date: 2025
 """
 
-# 🔹 Standard Library
+# -----------------------------------------------------------------------------
+# 🔹 Standard Library Imports
+# -----------------------------------------------------------------------------
 import importlib
 import logging
 import time
@@ -20,36 +22,22 @@ import os
 import sys
 from dotenv import load_dotenv
 
+# -----------------------------------------------------------------------------
+# 🔹 Load Environment and Detect Execution Mode
+# -----------------------------------------------------------------------------
 load_dotenv()
-EXECUTION_MODE = os.getenv("EXECUTION_MODE", "manual")
+EXECUTION_MODE = os.getenv("EXECUTION_MODE", "manual").lower()
 
-imports = {}
-
-if EXECUTION_MODE == "manual":
-    from manual_execution.pages import bookslot_info_otp_page as manual_page
-    imports['BookslotPage'] = manual_page.BookslotInfoOtpPage
-    # Add other manual imports
-elif EXECUTION_MODE == "ai":
-    from ai_execution.pages import bookslot_info_otp_page as ai_page
-    imports['BookslotPage'] = ai_page.BookslotInfoOtpPage
-    # Add other AI imports
-else:
-    raise ValueError(f"Invalid EXECUTION_MODE: {EXECUTION_MODE}")
-
-# 🔹 Configure Logging
+# -----------------------------------------------------------------------------
+# 🔹 Configure Logging for the Entire Script
+# -----------------------------------------------------------------------------
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-# ----------------------------------------------------------------
-# 🚩 STEP 1: INITIALIZE PROJECT ROOT PATH (Best placed at the top)
-# ----------------------------------------------------------------
-
+# -----------------------------------------------------------------------------
+# 🚩 STEP 1: Ensure project root is available in sys.path
+# -----------------------------------------------------------------------------
 def ensure_project_root_in_sys_path(relative_levels_up=2):
-    """
-    Ensures the project root is in sys.path for robust imports.
-
-    Args:
-        relative_levels_up (int): Levels to navigate up to reach the project root.
-    """
+    """Ensure the project root directory is included in sys.path."""
     current_file = os.path.abspath(__file__)
     project_root = os.path.abspath(os.path.join(current_file, *[".."] * relative_levels_up))
     if project_root not in sys.path:
@@ -58,22 +46,25 @@ def ensure_project_root_in_sys_path(relative_levels_up=2):
     else:
         logging.info(f"ℹ️ Project root '{project_root}' already in sys.path.")
 
-# Initialize immediately
+# Execute immediately
 ensure_project_root_in_sys_path(relative_levels_up=2)
 
+# -----------------------------------------------------------------------------
+# 🚩 STEP 2: Define Safe Import Function with Retry Logic
+# -----------------------------------------------------------------------------
 def safe_import(module_path, attribute_name=None, alias=None, retries=3, delay=2):
     """
-    Safely imports a module or attribute, retrying upon failure.
+    Import a module or its attribute safely with retry mechanism.
 
     Args:
-        module_path (str): Module path to import.
-        attribute_name (str, optional): Specific attribute or class to import.
-        alias (str, optional): Friendly name for logging.
-        retries (int): Number of retry attempts upon failure.
-        delay (int): Delay in seconds between retries.
+        module_path (str): Dotted path of the module.
+        attribute_name (str): Optional attribute (function/class/etc.) to extract.
+        alias (str): Friendly name for logging.
+        retries (int): Number of retry attempts.
+        delay (int): Seconds to wait between retries.
 
     Returns:
-        Imported object or None if all retries fail.
+        object or None
     """
     attempt = 1
     while attempt <= retries:
@@ -85,52 +76,41 @@ def safe_import(module_path, attribute_name=None, alias=None, retries=3, delay=2
             return imported_obj
         except ModuleNotFoundError as e:
             logging.warning(f"⚠️ Attempt {attempt} failed importing '{module_path}.{attribute_name or ''}': {e}")
-            if attempt < retries:
-                logging.info(f"⏳ Retrying '{module_path}' in {delay} seconds...")
-                time.sleep(delay)
-                attempt += 1
-            else:
-                logging.error(f"❌ All {retries} attempts failed for '{module_path}'.")
-                return None
         except Exception as e:
             logging.error(f"❌ Unexpected error during import '{module_path}.{attribute_name or ''}': {e}")
             return None
+        attempt += 1
+        if attempt <= retries:
+            logging.info(f"⏳ Retrying '{module_path}' in {delay} seconds...")
+            time.sleep(delay)
+    logging.error(f"❌ All {retries} attempts failed for '{module_path}.{attribute_name or ''}'.")
+    return None
 
-
+# -----------------------------------------------------------------------------
+# 🚩 STEP 3: Define Bulk Import Loader
+# -----------------------------------------------------------------------------
 def bulk_safe_imports(imports_dict, retries=3, delay=2):
-    """
-    Bulk imports multiple modules/attributes with retry logic.
-
-    Args:
-        imports_dict (dict): Dictionary with alias as key, full module paths as value.
-        retries (int): Number of retry attempts for each import.
-        delay (int): Delay in seconds between retries.
-
-    Returns:
-        dict: Dictionary of imported objects.
-    """
+    """Import multiple entries from a dictionary of module.attribute paths."""
     imported_objects = {}
     for alias, full_path in imports_dict.items():
         module_path, _, attribute_name = full_path.rpartition('.')
         if not module_path:
             module_path = full_path
             attribute_name = None
-        imported_obj = safe_import(module_path, attribute_name, alias, retries, delay)
-        imported_objects[alias] = imported_obj
+        imported_objects[alias] = safe_import(module_path, attribute_name, alias, retries, delay)
     return imported_objects
 
-
-
-
-# 🔹 Centralized import definitions
+# -----------------------------------------------------------------------------
+# 🚩 STEP 4: Centralized Import Definitions (Standard + Custom)
+# -----------------------------------------------------------------------------
 imports_needed = {
     # Standard Library
     "time": "time",
     "pathlib": "pathlib",
     "logging": "logging",
-    "getenv": "os.getenv", 
+    "getenv": "os.getenv",
 
-    # Selenium Imports
+    # Selenium Core
     "webdriver": "selenium.webdriver",
     "Service": "selenium.webdriver.chrome.service.Service",
     "Options": "selenium.webdriver.chrome.options.Options",
@@ -146,29 +126,31 @@ imports_needed = {
     "ElementClickInterceptedException": "selenium.common.exceptions.ElementClickInterceptedException",
     "ElementNotInteractableException": "selenium.common.exceptions.ElementNotInteractableException",
 
-    # Selenium WebDriver & WebElement Classes
+    # WebDriver Classes
     "WebDriver": "selenium.webdriver.remote.webdriver.WebDriver",
     "WebElement": "selenium.webdriver.remote.webelement.WebElement",
 
-    # Custom Utility Functions
+    # Custom Utilities
     "simulate_typing": "utils.human_actions.simulate_typing",
     "human_scroll": "utils.human_actions.human_scroll",
     "random_mouse_movement": "utils.human_actions.random_mouse_movement",
     "run_chrome_automation": "selenium_utils.BrowserUtils.chrome_automation_launcher.run_chrome_automation",
     "ElementFinder": "selenium_utils.elementFinderUtils.element_finder.ElementFinder",
 
-    #Environement Variable load 
+    # dotenv loader
     "load_dotenv": "dotenv.load_dotenv",
-
 }
 
-
-# 🚀 Execute bulk imports with retry logic
+# -----------------------------------------------------------------------------
+# 🚩 STEP 5: Run the Bulk Import Process
+# -----------------------------------------------------------------------------
 logging.info("\n🚀 Starting dynamic imports with retry logic...")
 imports = bulk_safe_imports(imports_needed, retries=3, delay=2)
 logging.info("✅ Dynamic imports with retry completed.\n")
 
-# 🔹 Automatically load .env file
+# -----------------------------------------------------------------------------
+# 🚩 STEP 6: Load Environment Variables via dotenv if available
+# -----------------------------------------------------------------------------
 if imports.get("load_dotenv"):
     imports["load_dotenv"]()
     logging.info("✅ .env file loaded successfully.")
