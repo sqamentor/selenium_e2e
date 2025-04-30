@@ -14,6 +14,7 @@ from imports_manager import imports
 
 #-------------------------------------------------------------------------------------------------
 # Assign dynamic imports to local variables
+webdriver=imports['webdriver']
 run_chrome_automation = imports['run_chrome_automation']
 ElementFinder = imports['ElementFinder']
 simulate_typing = imports['simulate_typing']

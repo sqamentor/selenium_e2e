@@ -42,7 +42,7 @@ if site_packages_path not in sys.path:
 # -----------------------------------------------------------------------------
 # 🚩 STEP 1: Ensure project root is available in sys.path
 # -----------------------------------------------------------------------------
-def ensure_project_root_in_sys_path(relative_levels_up=2):
+def ensure_project_root_in_sys_path(relative_levels_up=4):
     """Ensure the project root directory is included in sys.path."""
     current_file = os.path.abspath(__file__)
     project_root = os.path.abspath(os.path.join(current_file, *[".."] * relative_levels_up))
@@ -119,6 +119,7 @@ imports_needed = {
 
     # Selenium Core
     "webdriver": "selenium.webdriver",
+    "WebDriver": "selenium.webdriver.remote.webdriver.WebDriver",
     "Service": "selenium.webdriver.chrome.service.Service",
     "Options": "selenium.webdriver.chrome.options.Options",
     "By": "selenium.webdriver.common.by.By",
@@ -126,6 +127,7 @@ imports_needed = {
     "ActionChains": "selenium.webdriver.common.action_chains.ActionChains",
     "WebDriverWait": "selenium.webdriver.support.ui.WebDriverWait",
     "EC": "selenium.webdriver.support.expected_conditions",
+
 
     # Selenium Exceptions
     "TimeoutException": "selenium.common.exceptions.TimeoutException",
@@ -143,7 +145,7 @@ imports_needed = {
     "random_mouse_movement": "utils.human_actions.random_mouse_movement",
     "run_chrome_automation": "selenium_utils.BrowserUtils.chrome_automation_launcher.run_chrome_automation",
     "ElementFinder": "selenium_utils.elementFinderUtils.element_finder.ElementFinder",
-    "generate_bookslot_payload": "utils.test_data_factory.generate_bookslot_payload",
+    "generate_bookslot_payload": "data.test_inputs.faker_bookslot_data.generate_bookslot_payload",
 
     # dotenv loader
     "load_dotenv": "dotenv.load_dotenv",
