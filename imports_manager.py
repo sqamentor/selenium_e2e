@@ -33,6 +33,12 @@ EXECUTION_MODE = os.getenv("EXECUTION_MODE", "manual").lower()
 # -----------------------------------------------------------------------------
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
+# Ensure site-packages in sys.path
+site_packages_path = os.path.join(sys.prefix, 'Lib', 'site-packages')
+if site_packages_path not in sys.path:
+    sys.path.insert(0, site_packages_path)
+    logging.info(f"✅ site-packages added to sys.path: {site_packages_path}")
+
 # -----------------------------------------------------------------------------
 # 🚩 STEP 1: Ensure project root is available in sys.path
 # -----------------------------------------------------------------------------
@@ -47,6 +53,7 @@ def ensure_project_root_in_sys_path(relative_levels_up=2):
         logging.info(f"ℹ️ Project root '{project_root}' already in sys.path.")
 
 # Execute immediately
+#sure_project_root_in_sys_path(relative_levels_up=2)
 ensure_project_root_in_sys_path(relative_levels_up=2)
 
 # -----------------------------------------------------------------------------
@@ -140,7 +147,6 @@ imports_needed = {
     # dotenv loader
     "load_dotenv": "dotenv.load_dotenv",
 }
-
 # -----------------------------------------------------------------------------
 # 🚩 STEP 5: Run the Bulk Import Process
 # -----------------------------------------------------------------------------

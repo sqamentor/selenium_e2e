@@ -1,28 +1,31 @@
-import sys
-import os
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))
-if project_root not in sys.path:
-    sys.path.insert(0, project_root)
-
-from selenium_utils.BrowserUtils.chrome_automation_launcher import run_chrome_automation
-#from utils.BrowserUtils.edge_automation_launcher import run_edge_automation
-from selenium_utils.elementFinderUtils.element_finder import ElementFinder
-from pages.bookslot_info_otp_page import BookslotInfoOtpPage
-from pages.schedular_page import WebSchedulerPage
-# After selecting appointment slot
-from selenium.common.exceptions import TimeoutException
-import logging
 import pathlib
-import time
-from selenium.common.exceptions import TimeoutException
-import pytest
-import allure
-from data.test_inputs.faker_bookslot_data import generate_bookslot_payload
-from utils.human_actions import simulate_typing, human_scroll, random_mouse_movement
-import pytest
-from pages.patient_information_page import PatientInformationPage
+import logging
+import sys, os
+current = os.path.dirname(__file__)
+root = os.path.abspath(os.path.join(current, '..'))  # Adjust levels here only if necessary
 
+if root not in sys.path:
+    sys.path.insert(0, root)
 
+from imports_manager import imports
+
+#-------------------------------------------------------------------------------------------------
+# Assign dynamic imports to local variables
+run_chrome_automation = imports['run_chrome_automation']
+ElementFinder = imports['ElementFinder']
+simulate_typing = imports['simulate_typing']
+human_scroll = imports['human_scroll']
+random_mouse_movement = imports['random_mouse_movement']
+WebDriverWait = imports['WebDriverWait']
+By = imports['By']
+Keys = imports['Keys']
+TimeoutException = imports['TimeoutException']
+NoSuchElementException = imports['NoSuchElementException']
+WebDriverWait = imports['WebDriverWait']
+EC = imports['EC']  # ✅ Only if EC is fixed as shown earlier
+
+from dotenv import load_dotenv
+load_dotenv()
 # ------------------------------------------------------------------------------------------------------------
 # Generate test data
 test_data = generate_bookslot_payload()

@@ -1,7 +1,7 @@
 import os
 import sys
 
-def ensure_project_root_in_sys_path(relative_levels_up=2, print_debug=True):
+def ensure_project_root_in_sys_path(relative_levels_up=4, print_debug=True):
     """
     Ensures that the project root is in sys.path for clean module imports.
     Typically called at the top of every script.
