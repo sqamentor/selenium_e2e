@@ -1,4 +1,4 @@
-base_url: "https://google.com"
+base_url: "https://bookslot-staging.centerforvein.com/?istestrecord=1"
 timeout: 20
 browser: "chrome"
 headless: false
