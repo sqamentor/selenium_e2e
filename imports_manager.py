@@ -143,6 +143,7 @@ imports_needed = {
     "random_mouse_movement": "utils.human_actions.random_mouse_movement",
     "run_chrome_automation": "selenium_utils.BrowserUtils.chrome_automation_launcher.run_chrome_automation",
     "ElementFinder": "selenium_utils.elementFinderUtils.element_finder.ElementFinder",
+    "generate_bookslot_payload": "utils.test_data_factory.generate_bookslot_payload",
 
     # dotenv loader
     "load_dotenv": "dotenv.load_dotenv",

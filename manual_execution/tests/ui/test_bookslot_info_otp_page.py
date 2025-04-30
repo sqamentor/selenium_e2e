@@ -1,13 +1,16 @@
 import pathlib
 import logging
 import sys, os
-current = os.path.dirname(__file__)
-root = os.path.abspath(os.path.join(current, '..'))  # Adjust levels here only if necessary
 
-if root not in sys.path:
-    sys.path.insert(0, root)
+# Ensure project root is added dynamically regardless of depth
+current_file = os.path.abspath(__file__)
+project_root = os.path.abspath(os.path.join(current_file, *[".."] * 4))  # 4 levels up from 'ui'
+
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
 
 from imports_manager import imports
+
 
 #-------------------------------------------------------------------------------------------------
 # Assign dynamic imports to local variables
@@ -23,12 +26,13 @@ TimeoutException = imports['TimeoutException']
 NoSuchElementException = imports['NoSuchElementException']
 WebDriverWait = imports['WebDriverWait']
 EC = imports['EC']  # ✅ Only if EC is fixed as shown earlier
+faker_bookslot_payload = imports["generate_bookslot_payload"]
 
 from dotenv import load_dotenv
 load_dotenv()
 # ------------------------------------------------------------------------------------------------------------
 # Generate test data
-test_data = generate_bookslot_payload()
+test_data = faker_bookslot_payload()
 # Allure: attach input data
 allure.attach(str(test_data), name="Input Payload", attachment_type=allure.attachment_type.JSON)
 # Set up browser once
