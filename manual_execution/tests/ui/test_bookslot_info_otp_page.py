@@ -10,11 +10,13 @@ if project_root not in sys.path:
     sys.path.insert(0, project_root)
 
 from imports_manager import imports
+import selenium.webdriver.support.expected_conditions as EC
+import allure
+
 
 
 #-------------------------------------------------------------------------------------------------
 # Assign dynamic imports to local variables
-webdriver=imports['webdriver']
 run_chrome_automation = imports['run_chrome_automation']
 ElementFinder = imports['ElementFinder']
 simulate_typing = imports['simulate_typing']
@@ -26,7 +28,7 @@ Keys = imports['Keys']
 TimeoutException = imports['TimeoutException']
 NoSuchElementException = imports['NoSuchElementException']
 WebDriverWait = imports['WebDriverWait']
-EC = imports['EC']  # ✅ Only if EC is fixed as shown earlier
+#EC = imports["EC"]  # ✅ Only if EC is fixed as shown earlier
 faker_bookslot_payload = imports["generate_bookslot_payload"]
 
 from dotenv import load_dotenv

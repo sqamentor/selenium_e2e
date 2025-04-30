@@ -118,7 +118,6 @@ imports_needed = {
     "getenv": "os.getenv",
 
     # Selenium Core
-    "webdriver": "selenium.webdriver",
     "WebDriver": "selenium.webdriver.remote.webdriver.WebDriver",
     "Service": "selenium.webdriver.chrome.service.Service",
     "Options": "selenium.webdriver.chrome.options.Options",
@@ -126,8 +125,7 @@ imports_needed = {
     "Keys": "selenium.webdriver.common.keys.Keys",
     "ActionChains": "selenium.webdriver.common.action_chains.ActionChains",
     "WebDriverWait": "selenium.webdriver.support.ui.WebDriverWait",
-    "EC": "selenium.webdriver.support.expected_conditions",
-
+    #"EC": "selenium.webdriver.support.expected_conditions",
 
     # Selenium Exceptions
     "TimeoutException": "selenium.common.exceptions.TimeoutException",
