@@ -1,0 +1,5 @@
+base_url: "https://google.com"
+timeout: 20
+browser: "chrome"
+headless: false
+remote_url: null
