@@ -1,0 +1,6 @@
+{
+    "sonarlint.connectedMode.project": {
+        "connectionId": "sqamentor",
+        "projectKey": "sqamentor_lokendra"
+    }
+}
