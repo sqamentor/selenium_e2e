@@ -134,7 +134,6 @@ imports_needed = {
     "ElementNotInteractableException": "selenium.common.exceptions.ElementNotInteractableException",
 
     # WebDriver Classes
-    "WebDriver": "selenium.webdriver.remote.webdriver.WebDriver",
     "WebElement": "selenium.webdriver.remote.webelement.WebElement",
 
     # Custom Utilities
@@ -163,3 +162,11 @@ if imports.get("load_dotenv"):
     logging.info("✅ .env file loaded successfully.")
 else:
     logging.warning("⚠️ load_dotenv not available; .env variables were not loaded.")
+
+# 🚩 STEP 7: Verify and Print Import Status
+logging.info("\n🔍 Verifying import status for all modules:")
+for alias, imported_obj in imports.items():
+    if imported_obj is not None:
+        logging.info(f"✅ Import successful: {alias} -> {imported_obj}")
+    else:
+        logging.error(f"❌ Import failed: {alias}")

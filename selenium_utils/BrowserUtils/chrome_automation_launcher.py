@@ -16,7 +16,7 @@ import json
 import tempfile
 import shutil
 import logging
-#import platform
+import platform
 from tqdm import tqdm
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -57,6 +57,9 @@ logging.info(f"[OK]-[LOGGING] Writing logs to: {LOG_FILE_PATH}")
 load_dotenv()
 ENABLE_AI = os.getenv("ENABLE_AI", "False").lower() == "true"
 DRIVERS_DIR = "./drivers"
+CHROMEDRIVER_FILENAME = "chromedriver.exe"
+CHROMEDRIVER_CONSTANT = CHROMEDRIVER_FILENAME
+CHROMEDRIVER_EXECUTABLE = CHROMEDRIVER_FILENAME
 HEADLESS = False
 target_url = os.getenv("TARGET_URL")
 print(f"This is target URL Confirmation from local .Env: {target_url}")
@@ -106,9 +109,11 @@ def get_matching_chromedriver_version(chrome_version):
     try:
         logging.info("[OK] Checking existing ChromeDriver compatibility...")
 
-        major = chrome_version.split('.')[0]
-        chromedriver_path = os.path.join(DRIVERS_DIR, "chromedriver.exe")
+        chromedriver_path = os.path.join(DRIVERS_DIR, CHROMEDRIVER_FILENAME)
         existing_version = get_existing_chromedriver_version(chromedriver_path)
+
+        # Define 'major' before using it
+        major = chrome_version.split('.')[0]  # Extract major version from chrome_version
 
         if existing_version and existing_version.startswith(major + "."):
             logging.info(f"[✓] Reusing existing ChromeDriver {existing_version} compatible with Chrome {chrome_version}")
@@ -164,12 +169,10 @@ def extract_zip(zip_path, extract_to):
             zip_ref.extractall(extract_to)
         logging.info(f"[OK] Extracted ChromeDriver to {extract_to}")
 
-        # Automatically move chromedriver.exe to drivers/ if needed
-        extracted_driver = os.path.join(extract_to, "chromedriver-win32", "chromedriver.exe")
-        if os.path.exists(extracted_driver):
-            shutil.move(extracted_driver, os.path.join(extract_to, "chromedriver.exe"))
-            shutil.rmtree(os.path.join(extract_to, "chromedriver-win32"))
-            logging.info("[OK] Moved ChromeDriver to root drivers directory.")
+        extracted_driver = os.path.join(extract_to, "chromedriver.exe")
+        shutil.move(extracted_driver, os.path.join(extract_to, CHROMEDRIVER_CONSTANT))
+        shutil.rmtree(os.path.join(extract_to, "chromedriver-win32"))
+        logging.info("[OK] Moved ChromeDriver to root drivers directory.")
     except Exception as e:
         if ENABLE_AI:
             explain_error_with_ai(str(e))
@@ -177,9 +180,9 @@ def extract_zip(zip_path, extract_to):
 
 def kill_existing_chrome_instances():
     try:
-        logging.info("[OK] Terminating existing Chrome/Chromedriver processes...")
-        subprocess.run("taskkill /f /im chrome.exe", check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        subprocess.run("taskkill /f /im chromedriver.exe", check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        subprocess.run(f"taskkill /f /im {CHROMEDRIVER_EXECUTABLE}", check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        subprocess.run(f"taskkill /f /im {CHROMEDRIVER_EXECUTABLE}", check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        subprocess.run(f"taskkill /f /im {CHROMEDRIVER_FILENAME}", check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         logging.info("[OK] Chrome/Chromedriver processes terminated.")
     except Exception as e:
         if ENABLE_AI:
@@ -236,9 +239,8 @@ def clean_session_files(profile_path):
         if os.path.exists(path):
             os.remove(path)
 
-def setup_chrome_options(profile_path, headless=False):
+def setup_chrome_options(headless=False):
     options = Options()
-    #options.add_argument(f"user-data-dir={profile_path}")
     options.add_argument("--disable-notifications")
     options.add_argument("--disable-infobars")
 
@@ -311,136 +313,108 @@ def did_page_fail_to_load(driver):
 # ------------------------- Reusable Function -------------------------
 #def run_chrome_automation(target_url: str = None):
 def run_chrome_automation(target_url):
-
-    if not target_url:
-        raise ValueError("❌ Target URL must be provided.")
-
-    if not is_valid_url(target_url):
-        raise ValueError(
-            f"❌ Invalid URL passed to Chrome: '{target_url}' (must start with http:// or https://)"
-        )
-
+    validate_target_url(target_url)
     temp_profile = None
     driver = None
     try:
-        logging.info("[OK] Setting up driver directory...")
-        os.makedirs(DRIVERS_DIR, exist_ok=True)
+        setup_driver_directory()
         kill_existing_chrome_instances()
-
-        logging.info("[OK] Detecting local Chrome version...")
         chrome_version = get_local_chrome_version()
-        driver_version, download_url = get_matching_chromedriver_version(chrome_version)
-
-        if download_url:
-            zip_path = os.path.join(DRIVERS_DIR, 'chromedriver.zip')
-            download_with_progress(download_url, zip_path)
-            extract_zip(zip_path, DRIVERS_DIR)
-
-        os.environ['PATH'] += os.pathsep + DRIVERS_DIR
-
-        # Create the temp profile first
-        temp_profile = create_temp_profile()
-        # Then clean up crash-related session files
-        clean_session_files(temp_profile) # Create clean profile
-
-        options = setup_chrome_options(temp_profile, HEADLESS) # Configure options with that profile
-
-        logging.info("[OK] Launching Chrome browser with WebDriver...")
-        driver = webdriver.Chrome(service=Service(), options=options) # Launch Chrome
-        #time.sleep(3)
-        driver.maximize_window()
-        driver.get(target_url)
-        # After page load:
-        try:
-            WebDriverWait(driver, 20).until(
-                EC.presence_of_element_located((By.ID, "form"))
-            )
-            logging.info("✅ Booking form detected and page DOM stabilized.")
-        except Exception as e:
-            logging.error(f"❌ Current form not detected properly: {e}")
-            raise
-        if ENABLE_AI:
-            verify_page_with_ai(driver, target_url)
-
-        if did_page_fail_to_load(driver):
-            logging.error("❌ Chrome could not load the URL. Likely a DNS or network error (e.g., ERR_NAME_NOT_RESOLVED).")
-            # Save a screenshot
-            #screenshot_path = os.path.join(os.getcwd(), "load_failure.png")
-            screenshot_path = os.path.join(BASE_DIR, "load_failure.png")
-            if driver.save_screenshot(screenshot_path):
-                logging.error(f"[✗] Screenshot saved to: {screenshot_path}")
-            else:
-                logging.warning("[!] Failed to save screenshot.")
-            return None
-        
-        logging.info("[OK] Browser successfully launched and page loaded.")
-        return driver  # ✅ SUCCESS CASE — return live driver
-
-    except Exception as e:
-        logging.exception("❌ An unexpected error occurred during browser setup.")
-        if ENABLE_AI:
-            explain_error_with_ai(str(e))
-
-        # Save screenshot for debugging (if driver still exists)
-        try:
-            if driver:
-                screenshot_path = os.path.join(BASE_DIR, "unhandled_exception.png")
-                #screenshot_path = os.path.join(os.getcwd(), "unhandled_exception.png")
-                if driver.save_screenshot(screenshot_path):
-                    logging.error(f"[✗] Screenshot saved for exception at: {screenshot_path}")
-                    analyze_screenshot_with_gpt(screenshot_path)  # OCR + AI
-                else:
-                    logging.warning("[!] Could not save screenshot for exception.")
-
-            return driver  # Only return if still usable
-        
-        except Exception as screenshot_err:
-            if ENABLE_AI:
-                explain_error_with_ai(str(screenshot_err))
-            logging.warning(f"[!] Failed while saving exception screenshot: {screenshot_err}")
-
-        dismiss_google_signin_popup(driver)
-        
-        geolocation_coordinates = {
-            "latitude": float(37.7749),
-            "longitude": float(-122.4194),
-            "accuracy": float(100)
-        }
-        driver.execute_cdp_cmd("Emulation.setGeolocationOverride", geolocation_coordinates)
-
-        logging.info("[OK] Browser is up and running. Geolocation applied.")
-
-        logging.info("[OK] Browser launched with geolocation spoofed.")
-        # ✅ Add this here!
-        
+        download_chromedriver_if_needed(chrome_version)
+        temp_profile = prepare_temp_profile()
+        options = setup_chrome_options(HEADLESS)
+        driver = launch_chrome_driver(options, target_url)  # Initialize the driver
+        handle_page_load(driver, target_url)
         return driver
-
     except Exception as e:
-        if ENABLE_AI:
-            explain_error_with_ai(str(e))
-        logging.exception("An unexpected error occurred after browser launch.")
-
-#    finally:
-#        logging.info("[OK] Cleaning up resources...")
-#        if 'driver' in locals():
-#            driver.quit()
-#        if os.path.exists(temp_profile):
-#            shutil.rmtree(temp_profile, ignore_errors=True)
-#        logging.info("[OK] Cleanup completed.")
-#-------------------------------------------------------------------------
+        handle_exception(driver, e)
+        return driver
     finally:
-        logging.info("[OK] Cleaning up resources...")
-        
-        # Don't auto-quit here; let the calling script decide
-        if os.path.exists(temp_profile):
-            shutil.rmtree(temp_profile, ignore_errors=True)
+        cleanup_resources(temp_profile)
 
-        logging.info("[OK] Cleanup completed.")
-        
+def validate_target_url(target_url):
+    if not target_url:
+        raise ValueError("❌ Target URL must be provided.")
+    if not is_valid_url(target_url):
+        raise ValueError(f"❌ Invalid URL passed to Chrome: '{target_url}' (must start with http:// or https://)")
+
+
+def setup_driver_directory():
+    logging.info("[OK] Setting up driver directory...")
+    os.makedirs(DRIVERS_DIR, exist_ok=True)
+
+
+def download_chromedriver_if_needed(chrome_version):
+    _, download_url = get_matching_chromedriver_version(chrome_version)
+    if download_url:
+        zip_path = os.path.join(DRIVERS_DIR, 'chromedriver.zip')
+        download_with_progress(download_url, zip_path)
+        extract_zip(zip_path, DRIVERS_DIR)
+    os.environ['PATH'] += os.pathsep + DRIVERS_DIR
+
+
+def prepare_temp_profile():
+    temp_profile = create_temp_profile()
+    clean_session_files(temp_profile)
+    return temp_profile
+
+
+def launch_chrome_driver(options, target_url):
+    logging.info("[OK] Launching Chrome browser with WebDriver...")
+    driver = webdriver.Chrome(service=Service(), options=options)
+    driver.maximize_window()
+    driver.get(target_url)
+    return driver
+
+
+def handle_page_load(driver, target_url):
+    try:
+        WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.ID, "form")))
+        logging.info("✅ Booking form detected and page DOM stabilized.")
+    except Exception as e:
+        logging.error(f"❌ Current form not detected properly: {e}")
+        raise
+    if ENABLE_AI:
+        verify_page_with_ai(driver, target_url)
+    if did_page_fail_to_load(driver):
+        handle_page_load_failure(driver)
+
+
+def handle_page_load_failure(driver):
+    logging.error("❌ Chrome could not load the URL. Likely a DNS or network error.")
+    screenshot_path = os.path.join(BASE_DIR, "load_failure.png")
+    if driver.save_screenshot(screenshot_path):
+        logging.error(f"[✗] Screenshot saved to: {screenshot_path}")
+    else:
+        logging.warning("[!] Failed to save screenshot.")
+
+
+def handle_exception(driver, exception):
+    logging.exception("❌ An unexpected error occurred during browser setup.")
+    if ENABLE_AI:
+        explain_error_with_ai(str(exception))
+    try:
+        if driver:
+            screenshot_path = os.path.join(BASE_DIR, "unhandled_exception.png")
+            if driver.save_screenshot(screenshot_path):
+                logging.error(f"[✗] Screenshot saved for exception at: {screenshot_path}")
+                analyze_screenshot_with_gpt(screenshot_path)
+            else:
+                logging.warning("[!] Could not save screenshot for exception.")
+    except Exception as screenshot_err:
         if ENABLE_AI:
-            summarize_logs_with_ai(LOG_FILE_PATH)
+            explain_error_with_ai(str(screenshot_err))
+        logging.warning(f"[!] Failed while saving exception screenshot: {screenshot_err}")
+
+def cleanup_resources(temp_profile):
+    logging.info("[OK] Cleaning up resources...")
+    if temp_profile and os.path.exists(temp_profile):
+        shutil.rmtree(temp_profile, ignore_errors=True)
+    logging.info("[OK] Cleanup completed.")
+    if ENABLE_AI:
+        summarize_logs_with_ai(LOG_FILE_PATH)
 #--------------------------------------------------------------------
 
-# ------------------------- Standalone Execution -------------------------
+#------------------------- Standalone Execution -------------------------
 #if __name__ == "__main__":
 #    run_chrome_automation("https://bookslots.centerforvein.com")

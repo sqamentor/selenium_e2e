@@ -5,18 +5,20 @@ project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")
 if project_root not in sys.path:
     sys.path.insert(0, project_root)
 
-from selenium_utils.BrowserUtils.chrome_automation_launcher import run_chrome_automation
-#from utils.BrowserUtils.edge_automation_launcher import run_edge_automation
+try:
+    from selenium_utils.BrowserUtils.chrome_automation_launcher import run_chrome_automation
+except ImportError as e:
+    raise ImportError("Failed to import 'run_chrome_automation'. Ensure 'selenium_utils' is installed and accessible.") from e
 from selenium_utils.elementFinderUtils.element_finder import ElementFinder
 from pages.bookslot_info_otp_page import BookslotInfoOtpPage
-from pages.EventSelectionPage import EventSelectionPage
+from pages.event_selection_page import EventSelectionPage
 from pages.schedular_page import WebSchedulerPage
 # After selecting appointment slot
-from pages.RequestAppointmentPage import RequestAppointmentPage
-from pages.PatientInformationPage import PatientInformationPage
-from pages.PatientExistant import PatientExistantPage
-from pages.PatientReferral import PatientReferral
-from pages.InsurancePage import InsurancePage
+from pages.request_appointment_page import RequestAppointmentPage
+from pages.patient_information_page import PatientInformationPage
+from pages.patient_existant import PatientExistantPage
+from pages.patient_referral import PatientReferral
+from pages.insurance_page import InsurancePage
 from selenium.common.exceptions import TimeoutException
 import logging
 import pathlib
@@ -59,7 +61,6 @@ def test_run_full():
     # Set up browser once
     target = "https://bookslot-staging.centerforvein.com/?istestrecord=1"
     driver = run_chrome_automation(target_url=target)
-    #driver = run_edge_automation(target_url=target)
     finder = ElementFinder(driver)
     # simulate human-like behavior
     try:
@@ -154,13 +155,9 @@ def test_run_full():
     except Exception as e:
         logging.exception(f"💥 Unexpected error during test run: {e}")
         driver.save_screenshot("screenshots/unexpected_error.png")
-
-    #if __name__ == "__main__":
-    #    input("✅ Done. Press Enter to quit...")
     finally:
         time.sleep(10)
         driver.quit()
-
 # ------------------------- Standalone Execution -------------------------
 if __name__ == "__main__":
     test_run_full()

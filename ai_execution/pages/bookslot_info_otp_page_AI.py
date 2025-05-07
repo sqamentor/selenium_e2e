@@ -18,6 +18,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -71,7 +72,6 @@ try:
     interact_by_label(driver, label="ZIP Code", field_type="textbox", value="20678")
 except Exception as e:
     logging.error(f"❌ Failed to interact with a field using AI: {e}")
-
 # 🧠 AI-Driven Clicks for Radio + Buttons
 try:
     interact_by_label(driver, label="Text", field_type="click")
@@ -87,14 +87,12 @@ try:
         logging.info("[WAIT] OTP input field is now visible and ready for typing.")
     except Exception as e:
         logging.error(f"[WAIT] OTP field did not appear in time: {e}")
-        raise Exception("❌ OTP field did not load after sending code")
-
+        raise TimeoutException("❌ OTP field did not load after sending code")
     interact_by_label(driver, label="Code", field_type="textbox", value="123456")
     # Then explicitly click the button
     interact_by_label(driver, label="Verify Code", field_type="click")
 except Exception as e:
     logging.error(f"❌ Failed during button or interaction click: {e}")
-
 # Cleanup
 logging.info("⏳ Bookslots Patient Information Page AI Test complete.")
 input("Press Enter to quit...")
