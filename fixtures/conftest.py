@@ -8,7 +8,7 @@ import pytest
 import os
 import allure
 import pytest
-from selenium_utils.BrowserUtils.chrome_automation_launcher import run_chrome_automation
+from selenium_utils.browser_utils.chrome_automation_launcher import run_chrome_automation
 
 # Dynamically add the project root to sys.path
 project_root = os.path.abspath(os.path.dirname(__file__))

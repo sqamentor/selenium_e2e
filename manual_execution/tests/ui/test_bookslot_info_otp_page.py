@@ -1,10 +1,10 @@
 import pathlib
 import logging
 import sys, os
+import selenium.webdriver.support.expected_conditions as EC
+import allure
 
 # Ensure project root is added dynamically regardless of depth
-
-
 current_file = pathlib.Path(__file__)
 project_root = os.path.abspath(os.path.join(current_file, *[".."] * 4))
 sys.path.append(os.path.join(project_root))  # Add root to path
@@ -15,6 +15,10 @@ print(f"Project root: {project_root}")
 # Import BookslotInfoOtpPage
 sys.path.append(os.path.join(project_root, "manual_execution", "pages"))
 sys.path.append(os.path.join(project_root, "selenium_utils"))
+from imports_manager import get_imports,imports
+imports = get_imports()
+
+run_chrome_automation = imports["run_chrome_automation"]
 try:
     from manual_execution.pages.bookslot_info_otp_page import BookslotInfoOtpPage
 except ModuleNotFoundError as e:
@@ -24,16 +28,13 @@ except ModuleNotFoundError as e:
 if project_root not in sys.path:
     sys.path.insert(0, project_root)
 print(f"sys.path: {sys.path}")
-
-from imports_manager import imports
-import selenium.webdriver.support.expected_conditions as EC
-import allure
-
 print("Current sys.path:", sys.path)
 
 #-------------------------------------------------------------------------------------------------
 # Assign dynamic imports to local variables
 run_chrome_automation = imports['run_chrome_automation']
+if run_chrome_automation is None:
+    raise ImportError("❌ run_chrome_automation was not imported. Check dynamic import path.")
 ElementFinder = imports['ElementFinder']
 simulate_typing = imports['simulate_typing']
 human_scroll = imports['human_scroll']
@@ -45,8 +46,6 @@ Keys = imports['Keys']
 TimeoutException = imports['TimeoutException']
 NoSuchElementException = imports['NoSuchElementException']
 WebDriverWait = imports['WebDriverWait']
-EC = imports["EC"]  # ✅ Only if EC is fixed as shown earlier
-
 faker_bookslot_payload = imports["generate_bookslot_payload"]
 
 print(f"run_chrome_automation: {run_chrome_automation}")
@@ -59,8 +58,8 @@ test_data = faker_bookslot_payload()
 # Allure: attach input data
 allure.attach(str(test_data), name="Input Payload", attachment_type=allure.attachment_type.JSON)
 # Set up browser once
-target = "https://bookslot-staging.centerforvein.com/?istestrecord=1"
-driver = run_chrome_automation(target_url=target)
+target = os.getenv("TARGET_URL")
+driver = run_chrome_automation(target)
 finder = ElementFinder(driver)
 # simulate human-like behavior
 try:

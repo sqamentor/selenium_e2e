@@ -15,7 +15,7 @@ Keys = imports['Keys']
 TimeoutException = imports['TimeoutException']
 NoSuchElementException = imports['NoSuchElementException']
 WebDriverWait = imports['WebDriverWait']
-EC = imports['EC']  # ✅ Only if EC is fixed as shown earlier
+import selenium.webdriver.support.expected_conditions as EC  # Re-importing EC
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -40,13 +40,6 @@ logging.info(f"[OK]-[LOGGING] Writing logs to: {LOG_FILE_PATH}")
 # ------------------------------------------------------------------------------------------------------------
 # UI Component: Book Slot Page (Center for Vein Restoration)
 logging.info("🚀 Starting UI interaction with Book Slot page...")
-target_url = imports["getenv"]("TARGET_URL")
-driver = run_chrome_automation(target_url)
-finder = ElementFinder(driver)
-
-# simulate human-like behavior
-random_mouse_movement(driver)
-human_scroll(driver)
 
 class BookslotInfoOtpPage:
     def __init__(self, driver, simulate_human_behavior:bool, timeout: int = 20):
@@ -168,24 +161,3 @@ class BookslotInfoOtpPage:
             logging.info("✅ 'Verify Code' button clicked.")
         else:
             logging.error("❌ 'Verify Code' button not found.")
-
-if __name__ == "__main__":
-    # Simulate human-like behavior before filling form
-    random_mouse_movement(driver)
-    human_scroll(driver)
-
-    form = BookslotInfoOtpPage(driver, simulate_human_behavior=True)
-    form.enter_first_name("Lokendra")
-    form.enter_last_name("Singh")
-    form.enter_email("lokendra.singh@abjima.com")
-    form.enter_phone_number("1234567890")
-    form.enter_zip("20678")
-    form.select_contact_method("Text")
-    form.click_send_code()
-    form.enter_code("123456")
-    form.verify_code()
-
-    logging.info("⏳ Bookslots Patient Information Page Test complete. Inspect form state.")
-    input("Press Enter to quit...")
-    #driver.quit()
-    #logging.info("🧹 Session ended.")

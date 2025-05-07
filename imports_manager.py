@@ -21,7 +21,6 @@ import time
 import os
 import sys
 from dotenv import load_dotenv
-from selenium.webdriver.support import expected_conditions as EC
 
 # -----------------------------------------------------------------------------
 # 🔹 Load Environment and Detect Execution Mode
@@ -54,7 +53,6 @@ def ensure_project_root_in_sys_path(relative_levels_up=4):
         logging.info(f"ℹ️ Project root '{project_root}' already in sys.path.")
 
 # Execute immediately
-#sure_project_root_in_sys_path(relative_levels_up=2)
 ensure_project_root_in_sys_path(relative_levels_up=2)
 
 # -----------------------------------------------------------------------------
@@ -118,13 +116,13 @@ def bulk_safe_imports(imports_dict, retries=3, delay=2):
 # 🚩 STEP 4: Centralized Import Definitions (Standard + Custom)
 # -----------------------------------------------------------------------------
 imports_needed = {
-    # Standard Library
+    # 🧰 Standard Library
     "time": "time",
     "pathlib": "pathlib",
     "logging": "logging",
     "getenv": "os.getenv",
 
-    # Selenium Core
+    # 🧪 Selenium Core Classes
     "WebDriver": "selenium.webdriver.remote.webdriver.WebDriver",
     "Service": "selenium.webdriver.chrome.service.Service",
     "Options": "selenium.webdriver.chrome.options.Options",
@@ -132,28 +130,30 @@ imports_needed = {
     "Keys": "selenium.webdriver.common.keys.Keys",
     "ActionChains": "selenium.webdriver.common.action_chains.ActionChains",
     "WebDriverWait": "selenium.webdriver.support.ui.WebDriverWait",
-    "EC": "selenium.webdriver.support.expected_conditions",
 
-    # Selenium Exceptions
+    # ❗ Selenium Exceptions
     "TimeoutException": "selenium.common.exceptions.TimeoutException",
     "NoSuchElementException": "selenium.common.exceptions.NoSuchElementException",
     "ElementClickInterceptedException": "selenium.common.exceptions.ElementClickInterceptedException",
     "ElementNotInteractableException": "selenium.common.exceptions.ElementNotInteractableException",
 
-    # WebDriver Classes
+    # 🌐 WebDriver Interfaces
     "WebElement": "selenium.webdriver.remote.webelement.WebElement",
 
-    # Custom Utilities
+    # 🔧 Custom AI + Human-Like Interaction Utilities
     "simulate_typing": "utils.human_actions.simulate_typing",
     "human_scroll": "utils.human_actions.human_scroll",
     "random_mouse_movement": "utils.human_actions.random_mouse_movement",
-    "run_chrome_automation": "selenium_utils.BrowserUtils.chrome_automation_launcher.run_chrome_automation",
-    "ElementFinder": "selenium_utils.elementFinderUtils.element_finder.ElementFinder",
+
+    # 🚀 Framework Utilities
+    "run_chrome_automation": "selenium_utils.browser_utils.chrome_automation_launcher.run_chrome_automation",
+    "ElementFinder": "selenium_utils.element_finder_utils.element_finder.ElementFinder",
     "generate_bookslot_payload": "data.test_inputs.faker_bookslot_data.generate_bookslot_payload",
 
-    # dotenv loader
+    # 🔐 Env Loader
     "load_dotenv": "dotenv.load_dotenv",
 }
+
 # -----------------------------------------------------------------------------
 # 🚩 STEP 5: Run the Bulk Import Process
 # -----------------------------------------------------------------------------
@@ -178,4 +178,14 @@ for alias, imported_obj in imports.items():
     else:
         logging.error(f"❌ Import failed: {alias}")
 
-EC = imports['EC']
+# Optional wrapper if simulate_human_behavior is ever dynamically added
+if "simulate_human_behavior" not in imports:
+    def simulate_human_behavior(driver):
+        imports["simulate_typing"](driver)
+        imports["human_scroll"](driver)
+        imports["random_mouse_movement"](driver)
+    imports["simulate_human_behavior"] = simulate_human_behavior
+
+# Add this at bottom of file
+def get_imports():
+    return bulk_safe_imports(imports_needed)

@@ -6,10 +6,10 @@ if project_root not in sys.path:
     sys.path.insert(0, project_root)
 
 try:
-    from selenium_utils.BrowserUtils.chrome_automation_launcher import run_chrome_automation
+    from selenium_utils.browser_utils.chrome_automation_launcher import run_chrome_automation
 except ImportError as e:
     raise ImportError("Failed to import 'run_chrome_automation'. Ensure 'selenium_utils' is installed and accessible.") from e
-from selenium_utils.elementFinderUtils.element_finder import ElementFinder
+from selenium_utils.element_finder_utils.element_finder import ElementFinder
 from pages.bookslot_info_otp_page import BookslotInfoOtpPage
 from pages.event_selection_page import EventSelectionPage
 from pages.schedular_page import WebSchedulerPage

@@ -1,7 +1,7 @@
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException, ElementNotInteractableException
 from selenium.webdriver.support.ui import Select
-from selenium_utils.BrowserUtils.loader_utils import wait_for_loader_to_disappear
+from selenium_utils.browser_utils.loader_utils import wait_for_loader_to_disappear
 from utils.human_actions import simulate_typing
 import unicodedata
 import logging

@@ -2,7 +2,7 @@
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException, ElementNotInteractableException
 from selenium.webdriver.support.ui import Select
-from selenium_utils.BrowserUtils.loader_utils import wait_for_loader_to_disappear
+from selenium_utils.browser_utils.loader_utils import wait_for_loader_to_disappear
 from utils.human_actions import simulate_typing
 import unicodedata
 import logging
@@ -17,12 +17,12 @@ import unicodedata
 import time
 import logging
 from selenium.common.exceptions import NoSuchElementException, ElementNotInteractableException
-from selenium_utils.BrowserUtils.loader_utils import wait_for_loader_to_disappear
+from selenium_utils.browser_utils.loader_utils import wait_for_loader_to_disappear
 from utils.human_actions import simulate_typing
-from selenium_utils.elementFinderUtils.element_finder import smart_find_element
+from selenium_utils.element_finder_utils.element_finder import smart_find_element
 from selenium.webdriver.common.by import By
-from selenium_utils.BrowserUtils.element_wait_utils import wait_for_element_to_be_enabled
-from selenium_utils.BrowserUtils.element_action_utils import retry_click_element
+from selenium_utils.browser_utils.element_wait_utils import wait_for_element_to_be_enabled
+from selenium_utils.browser_utils.element_action_utils import retry_click_element
 
 def try_selectors(driver, selectors, field_type, input_value=None, label=""):
     by_map = {

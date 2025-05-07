@@ -28,7 +28,7 @@ from selenium.common.exceptions import NoSuchElementException,TimeoutException
 from dotenv import load_dotenv
 import re
 import pathlib
-from selenium_utils.BrowserUtils.browser_ai_utils import (
+from selenium_utils.browser_utils.browser_ai_utils import (
     explain_error_with_ai,
     summarize_logs_with_ai,
     analyze_screenshot_with_gpt,

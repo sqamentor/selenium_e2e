@@ -5,7 +5,7 @@ import functools
 import time
 import logging
 
-from selenium_utils.BrowserUtils.loader_utils import wait_for_loader_to_disappear
+from selenium_utils.browser_utils.loader_utils import wait_for_loader_to_disappear
 
 def smart_retry(exceptions, tries=3, delay=1, backoff=1):
     def decorator(func):

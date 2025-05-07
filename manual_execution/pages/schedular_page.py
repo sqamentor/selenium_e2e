@@ -7,7 +7,7 @@ from selenium.common.exceptions import TimeoutException
 import time
 from datetime import datetime, timedelta
 
-from selenium_utils.elementFinderUtils.element_finder import ElementFinder
+from selenium_utils.element_finder_utils.element_finder import ElementFinder
 
 class WebSchedulerPage:
     def __init__(self, driver, timeout=25):

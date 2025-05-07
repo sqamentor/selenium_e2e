@@ -42,7 +42,7 @@ for p in sys.path:
     print("   ", p)
 # Try importing
 try:
-    from selenium_utils.elementFinderUtils.element_finder import ElementFinder
+    from selenium_utils.element_finder_utils.element_finder import ElementFinder
     print("\n✅ Import successful!")
 except ModuleNotFoundError as e:
     print("\n❌ Import failed:", e)

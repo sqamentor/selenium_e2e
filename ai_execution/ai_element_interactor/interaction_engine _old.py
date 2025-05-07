@@ -2,7 +2,7 @@ from selenium.common.exceptions import NoSuchElementException, ElementNotInterac
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.by import By
 import logging
-from selenium_utils.BrowserUtils.loader_utils import wait_for_loader_to_disappear
+from selenium_utils.browser_utils.loader_utils import wait_for_loader_to_disappear
 
 
 def try_selectors(driver, selectors, field_type, input_value=None, label=""):

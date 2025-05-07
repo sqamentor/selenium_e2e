@@ -30,10 +30,10 @@ from ai_element_interactor.ai_field_interactor import interact_by_label
 from utils.human_actions import simulate_typing, human_scroll, random_mouse_movement
 
 # ✅ Browser Launcher
-from selenium_utils.BrowserUtils.chrome_automation_launcher import run_chrome_automation
+from selenium_utils.browser_utils.chrome_automation_launcher import run_chrome_automation
 
 # ✅ Global Smart Loader Wait
-from selenium_utils.BrowserUtils.loader_utils import wait_for_loader_to_disappear
+from selenium_utils.browser_utils.loader_utils import wait_for_loader_to_disappear
 
 # ------------------------- Setup Logging ------------------------------------------------------------------------------------------------
 BASE_DIR = pathlib.Path(__file__).parent.resolve()
