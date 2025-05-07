@@ -21,6 +21,7 @@ import time
 import os
 import sys
 from dotenv import load_dotenv
+from selenium.webdriver.support import expected_conditions as EC
 
 # -----------------------------------------------------------------------------
 # 🔹 Load Environment and Detect Execution Mode
@@ -73,21 +74,27 @@ def safe_import(module_path, attribute_name=None, alias=None, retries=3, delay=2
     Returns:
         object or None
     """
-    attempt = 1
-    while attempt <= retries:
+    def attempt_import(attempt):
         try:
             module = importlib.import_module(module_path)
-            imported_obj = getattr(module, attribute_name) if attribute_name else module
+            imported_obj = module if attribute_name is None else getattr(module, attribute_name)
             display_name = alias or attribute_name or module_path
             logging.info(f"✅ Successfully imported '{display_name}' from '{module_path}' (Attempt {attempt}).")
             return imported_obj
         except ModuleNotFoundError as e:
             logging.warning(f"⚠️ Attempt {attempt} failed importing '{module_path}.{attribute_name or ''}': {e}")
+        except AttributeError as e:
+            logging.error(f"❌ AttributeError during import '{module_path}.{attribute_name or ''}': {e}")
+            return None
         except Exception as e:
             logging.error(f"❌ Unexpected error during import '{module_path}.{attribute_name or ''}': {e}")
             return None
-        attempt += 1
-        if attempt <= retries:
+
+    for attempt in range(1, retries + 1):
+        imported_obj = attempt_import(attempt)
+        if imported_obj is not None:
+            return imported_obj
+        if attempt < retries:
             logging.info(f"⏳ Retrying '{module_path}' in {delay} seconds...")
             time.sleep(delay)
     logging.error(f"❌ All {retries} attempts failed for '{module_path}.{attribute_name or ''}'.")
@@ -125,7 +132,7 @@ imports_needed = {
     "Keys": "selenium.webdriver.common.keys.Keys",
     "ActionChains": "selenium.webdriver.common.action_chains.ActionChains",
     "WebDriverWait": "selenium.webdriver.support.ui.WebDriverWait",
-    #"EC": "selenium.webdriver.support.expected_conditions",
+    "EC": "selenium.webdriver.support.expected_conditions",
 
     # Selenium Exceptions
     "TimeoutException": "selenium.common.exceptions.TimeoutException",
@@ -170,3 +177,5 @@ for alias, imported_obj in imports.items():
         logging.info(f"✅ Import successful: {alias} -> {imported_obj}")
     else:
         logging.error(f"❌ Import failed: {alias}")
+
+EC = imports['EC']

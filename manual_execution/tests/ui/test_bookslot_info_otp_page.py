@@ -3,15 +3,20 @@ import logging
 import sys, os
 
 # Ensure project root is added dynamically regardless of depth
-current_file = os.path.abspath(__file__)
-project_root = os.path.abspath(os.path.join(current_file, *[".."] * 4))  # 4 levels up from 'ui'
+
+
+current_file = pathlib.Path(__file__)
+project_root = os.path.abspath(os.path.join(current_file, *[".."] * 4))
+sys.path.append(os.path.join(project_root))  # Add root to path
 print(f"Project root: {project_root}")
+
+
 
 # Import BookslotInfoOtpPage
 sys.path.append(os.path.join(project_root, "manual_execution", "pages"))
-sys.path.append(os.path.join(project_root, "manual_execution", "pages"))
+sys.path.append(os.path.join(project_root, "selenium_utils"))
 try:
-    from bookslot_info_otp_page import BookslotInfoOtpPage
+    from manual_execution.pages.bookslot_info_otp_page import BookslotInfoOtpPage
 except ModuleNotFoundError as e:
     logging.error(f"Module not found: {e}")
     raise
@@ -41,7 +46,10 @@ TimeoutException = imports['TimeoutException']
 NoSuchElementException = imports['NoSuchElementException']
 WebDriverWait = imports['WebDriverWait']
 EC = imports["EC"]  # ✅ Only if EC is fixed as shown earlier
+
 faker_bookslot_payload = imports["generate_bookslot_payload"]
+
+print(f"run_chrome_automation: {run_chrome_automation}")
 
 from dotenv import load_dotenv
 load_dotenv()
