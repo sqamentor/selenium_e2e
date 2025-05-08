@@ -146,9 +146,9 @@ imports_needed = {
     "random_mouse_movement": "utils.human_actions.random_mouse_movement",
 
     # 🚀 Framework Utilities
-    "run_chrome_automation": "selenium_utils.browser_utils.chrome_automation_launcher.run_chrome_automation",
-    "ElementFinder": "selenium_utils.element_finder_utils.element_finder.ElementFinder",
     "generate_bookslot_payload": "data.test_inputs.faker_bookslot_data.generate_bookslot_payload",
+    "run_chrome_automation": "selenium_utils.browser_utils.chrome_automation_launcher.run_chrome_automation",
+    "ElementFinder": "selenium_utils.element_finder_utils.element_finder.ElementFinder",  # Fixed folder name
 
     # 🔐 Env Loader
     "load_dotenv": "dotenv.load_dotenv",

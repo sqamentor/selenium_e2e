@@ -1,73 +1,67 @@
 # run_main_test.py
-import sys
-import os
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))
-if project_root not in sys.path:
-    sys.path.insert(0, project_root)
+import sys, os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..")))
 
-try:
-    from selenium_utils.browser_utils.chrome_automation_launcher import run_chrome_automation
-except ImportError as e:
-    raise ImportError("Failed to import 'run_chrome_automation'. Ensure 'selenium_utils' is installed and accessible.") from e
-from selenium_utils.element_finder_utils.element_finder import ElementFinder
-from pages.bookslot_info_otp_page import BookslotInfoOtpPage
-from pages.event_selection_page import EventSelectionPage
-from pages.schedular_page import WebSchedulerPage
-# After selecting appointment slot
-from pages.request_appointment_page import RequestAppointmentPage
-from pages.patient_information_page import PatientInformationPage
-from pages.patient_existant import PatientExistantPage
-from pages.patient_referral import PatientReferral
-from pages.insurance_page import InsurancePage
-from selenium.common.exceptions import TimeoutException
-import logging
 import pathlib
 import time
-from selenium.common.exceptions import TimeoutException
+import logging
+import sys
+import os
+import selenium.webdriver.support.expected_conditions as EC
 import pytest
 import allure
-from data.test_inputs.faker_bookslot_data import generate_bookslot_payload
-from utils.human_actions import simulate_typing, human_scroll, random_mouse_movement
+from auto_importer import smart_import
+# Dynamically import the imports dictionary from imports_manager
+get_imports = smart_import("imports_manager.get_imports")
+imports = get_imports() if get_imports else {}
+# Pull specific objects dynamically
+run_chrome_automation = imports.get("run_chrome_automation")
+ElementFinder = imports.get("ElementFinder")
+WebSchedulerPage = imports.get("WebSchedulerPage")
+simulate_typing = imports.get("simulate_typing")
+human_scroll = imports.get("human_scroll")
+random_mouse_movement = imports.get("random_mouse_movement")
+simulate_human_behavior = imports.get("simulate_human_behavior")
+WebDriverWait = imports.get("WebDriverWait")
+By = imports.get("By")
+RequestAppointmentPage = imports.get("RequestAppointmentPage")
+EventSelectionPage = imports.get("EventSelectionPage")
+PatientInformationPage = imports.get("PatientInformationPage")
+PatientExistantPage = imports.get("PatientExistantPage")
+PatientReferral = imports.get("PatientReferral")
+InsurancePage = imports.get("InsurancePage")
+Keys = imports.get("Keys")
+TimeoutException = imports.get("TimeoutException")
+NoSuchElementException = imports.get("NoSuchElementException")
+faker_bookslot_payload = imports.get("generate_bookslot_payload")
 
+if not run_chrome_automation:
+    raise ImportError("❌ run_chrome_automation was not imported.")
+# Load environment variables
+smart_import("dotenv.load_dotenv")()
+# Attach generated test data to Allure
+if not faker_bookslot_payload:
+    raise ImportError("❌ generate_bookslot_payload was not imported.")
+test_data = faker_bookslot_payload()
+allure.attach(str(test_data), name="Input Payload", attachment_type=allure.attachment_type.JSON)
+# Generate test data
+# Allure: attach input data
+allure.attach(str(test_data), name="Input Payload", attachment_type=allure.attachment_type.JSON)
+# Start browser and form logic
+target = os.getenv("TARGET_URL")
+driver = run_chrome_automation(target)
+finder = ElementFinder(driver)
+BookslotInfoOtpPage = smart_import("manual_execution.pages.bookslot_info_otp_page.BookslotInfoOtpPage")
+@allure.title("Full End-to-End Booking Flow")
 
-
-# ------------------------- Setup Logging ------------------------------------------------------------------------------------------------
-#Define the directory and log file path
-BASE_DIR = pathlib.Path(__file__).parent.resolve()
-LOG_FILE_PATH = os.path.join(BASE_DIR, "run_full_test.log")
-
-#Set up logging using that path
-logging.basicConfig(
-    level=logging.INFO,
-    format='[%(asctime)s] [%(levelname)s] %(message)s',
-    handlers=[
-        logging.FileHandler(LOG_FILE_PATH, mode='w', encoding='utf-8'),
-        logging.StreamHandler()
-    ]
-)
-#Log where the logs are going
-logging.info(f"[OK]-[LOGGING] Writing logs to: {LOG_FILE_PATH}")
-# ---------------------------------------------------------------------------------------------------------
 
 @pytest.mark.allure_label("Test")
 #@allure.severity(allure.severity_level.CRITICAL)  # ✅ fully supported decorator
 @allure.title("Full End-to-End Booking Flow")
 def test_run_full():
-    # ------------------------------------------------------------------------------------------------------------
-    # Generate test data
-    test_data = generate_bookslot_payload()
-    # Allure: attach input data
-    allure.attach(str(test_data), name="Input Payload", attachment_type=allure.attachment_type.JSON)
-    # Set up browser once
-    target = "https://bookslot-staging.centerforvein.com/?istestrecord=1"
-    driver = run_chrome_automation(target_url=target)
-    finder = ElementFinder(driver)
-    # simulate human-like behavior
     try:
         # Step 1: Book Slot Page
-        #@allure.title("Full End-to-End Booking Flow")
-        form = BookslotInfoOtpPage(driver)
-        #form = BookslotInfoOtpPage(browser, simulate_human_behavior)
+        form = BookslotInfoOtpPage(driver, simulate_human_behavior)
         form.enter_first_name(test_data["first_name"])
         form.enter_last_name(test_data["last_name"])
         form.enter_email(test_data["email"])

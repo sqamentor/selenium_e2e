@@ -243,44 +243,27 @@ def setup_chrome_options(headless=False):
     options = Options()
     options.add_argument("--disable-notifications")
     options.add_argument("--disable-infobars")
-
-    # KEY for removing "automation" infobar
     options.add_experimental_option("excludeSwitches", ["enable-automation"])
     options.add_experimental_option("useAutomationExtension", False)
     options.add_argument("--disable-blink-features=AutomationControlled")
-
     options.add_argument("--lang=en-US")
     options.add_argument("--log-level=3")
     options.add_argument("--disable-background-networking")
     options.add_argument("--mute-audio")
-    options.add_argument(f"user-data-dir=c:/Users/{os.getlogin()}/AppData/Local/Google/Chrome/User Data")
-    options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.1000.0 Safari/537.36")
-    options.add_argument("--lang=en-US")
-    options.add_argument("--log-level=3")
     options.add_argument("--disable-logging")
     options.add_argument("--metrics-recording-only")
     options.add_argument("--no-default-browser-check")
     options.add_argument("--disable-default-apps")
     options.add_argument("--no-first-run")
-    options.add_argument("--disable-session-crashed-bubble")
-    #options.add_argument("--incognito")
 
-
-
-    options.add_experimental_option("prefs", {
-        "profile.default_content_setting_values.geolocation": 1,
-         "session.restore_on_startup": 0,
-        "credentials_enable_service": False,
-        "profile.password_manager_enabled": False,
-        "profile.exit_type": "Normal",
-        "profile.exited_cleanly": True,
-        "translate.enabled": False
-    })
+    # Use a unique temporary directory for user data
+    temp_user_data_dir = tempfile.mkdtemp()
+    options.add_argument(f"--user-data-dir={temp_user_data_dir}")
 
     if headless:
         options.add_argument("--headless=new")
         options.add_argument("--window-size=1920,1080")
-    
+
     return options
 
 def dismiss_google_signin_popup(driver):
@@ -311,7 +294,6 @@ def did_page_fail_to_load(driver):
         return False
 
 # ------------------------- Reusable Function -------------------------
-#def run_chrome_automation(target_url: str = None):
 def run_chrome_automation(target_url):
     validate_target_url(target_url)
     temp_profile = None
@@ -323,7 +305,9 @@ def run_chrome_automation(target_url):
         download_chromedriver_if_needed(chrome_version)
         temp_profile = prepare_temp_profile()
         options = setup_chrome_options(HEADLESS)
-        driver = launch_chrome_driver(options, target_url)  # Initialize the driver
+        driver = launch_chrome_driver(options, target_url)
+        if not driver:
+            raise RuntimeError("❌ WebDriver initialization failed.")
         handle_page_load(driver, target_url)
         return driver
     except Exception as e:
@@ -411,8 +395,6 @@ def cleanup_resources(temp_profile):
     if temp_profile and os.path.exists(temp_profile):
         shutil.rmtree(temp_profile, ignore_errors=True)
     logging.info("[OK] Cleanup completed.")
-    if ENABLE_AI:
-        summarize_logs_with_ai(LOG_FILE_PATH)
 #--------------------------------------------------------------------
 
 #------------------------- Standalone Execution -------------------------

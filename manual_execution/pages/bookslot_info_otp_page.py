@@ -90,6 +90,7 @@ class BookslotInfoOtpPage:
             logging.error(f"❌ {field_name} field not found.")
 
     def enter_first_name(self, first_name):
+        element = self.finder.find("id", "FirstName", visible=True)
         self.type_text("id", "FirstName", first_name, "First Name")
 
     def enter_last_name(self, last_name):

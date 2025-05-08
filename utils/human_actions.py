@@ -13,16 +13,17 @@ def simulate_typing(element, text, delay_range=(0.05, 0.15)):
     """
     try:
         tag = element.tag_name.lower()
+        adjusted_delay_range = delay_range
         if tag in ['textarea', 'input']:
-            delay_range = (0.07, 0.18)
+            adjusted_delay_range = (0.07, 0.18)
         elif tag in ['div', 'span']:
-            delay_range = (0.04, 0.1)
+            adjusted_delay_range = (0.04, 0.1)
         else:
-            delay_range = (0.05, 0.12)
+            adjusted_delay_range = (0.05, 0.12)
 
         for char in text:
             element.send_keys(char)
-            time.sleep(random.uniform(*delay_range))
+            time.sleep(random.uniform(*adjusted_delay_range))
 
     except Exception as e:
         logging.error(f"❌ Typing simulation failed: {e}")

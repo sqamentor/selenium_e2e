@@ -33,10 +33,9 @@ logging.basicConfig(
 logging.info(f"[OK]-[LOGGING] Writing logs to: {LOG_FILE_PATH}")
 
 class ElementFinder:
-    def __init__(self, driver, timeout=15, poll_frequency=0.5):
+    def __init__(self, driver, timeout=10):
         self.driver = driver
         self.timeout = timeout
-        self.poll_frequency = poll_frequency
 
     def get_locator(self, locator_type, locator_value):
         locator_type = locator_type.lower()
@@ -56,34 +55,22 @@ class ElementFinder:
 
     def find(self, by_type, locator, visible=False, clickable=False):
         try:
-            # 🚨 Validation before usage
-            if by_type.lower() == "xpath" and (not locator.strip().startswith(("/", "//"))) or "None" in locator or "undefined" in locator:
-                logging.error(f"❌ Invalid XPath locator skipped: {locator}")
-                return None
-            if not locator.strip():
-                logging.error(f"❌ Empty locator skipped")
-                return None
-
-            wait = WebDriverWait(self.driver, self.timeout)
-
-            if visible and clickable:
-                element = wait.until(EC.element_to_be_clickable((getattr(By, by_type.upper()), locator)))
+            if clickable:
+                # Wait for the element to be clickable
+                element = WebDriverWait(self.driver, self.timeout).until(
+                    EC.element_to_be_clickable((getattr(By, by_type.upper()), locator))
+                )
             elif visible:
-                element = wait.until(EC.visibility_of_element_located((getattr(By, by_type.upper()), locator)))
+                # Wait for the element to be visible
+                element = WebDriverWait(self.driver, self.timeout).until(
+                    EC.visibility_of_element_located((getattr(By, by_type.upper()), locator))
+                )
             else:
-                element = wait.until(EC.presence_of_element_located((getattr(By, by_type.upper()), locator)))
-
-            logging.info(f"✅ Found element [{by_type}] {locator}")
-            wait_for_loader_to_disappear(self.driver)
+                # Find the element without waiting for visibility or clickability
+                element = self.driver.find_element(getattr(By, by_type.upper()), locator)
             return element
-
-        except TimeoutException:
-            logging.error(f"⏱️ Timeout: Element not found using {by_type} = {locator}")
-            self._capture_failure_screenshot(f"timeout_{by_type}_{locator}")
-            return None
         except Exception as e:
-            logging.exception(f"❌ Unexpected error while finding element: {e}")
-            self._capture_failure_screenshot(f"error_{by_type}_{locator}")
+            logging.error(f"❌ Error finding element ({by_type}, {locator}): {e}")
             return None
 
     def highlight(self, element):
@@ -153,45 +140,52 @@ class ElementFinder:
             self.driver.save_screenshot("screenshots/element_not_clickable.png")
             raise
 
-    def smart_find_element(driver, by, value, retries=3, wait_between=1):
+    def smart_find_element(self, driver, by, value, retries=3, wait_between=1):
         for attempt in range(retries):
             try:
-                element = driver.find_element(by, value)
-                logging.info(f"[SMART_FIND] Found normally on attempt {attempt+1}: {value}")
-                return element
+                return self._find_normally(driver, by, value, attempt)
             except Exception as normal_e:
                 logging.warning(f"[SMART_FIND] Normal find attempt {attempt+1} failed: {normal_e}")
-
-                try:
-                    all_elements = driver.execute_script('return document.querySelectorAll("*")')
-                    for root in all_elements:
-                        try:
-                            shadow_root = driver.execute_script('return arguments[0].shadowRoot', root)
-                            if shadow_root:
-                                found = shadow_root.find_element(by, value)
-                                if found:
-                                    logging.info(f"[SMART_FIND] Found inside Shadow DOM on attempt {attempt+1}: {value}")
-                                    return found
-                        except Exception:
-                            continue
-                except Exception:
-                    pass
-
-                try:
-                    iframes = driver.find_elements(By.TAG_NAME, "iframe")
-                    for index, iframe in enumerate(iframes):
-                        try:
-                            driver.switch_to.frame(iframe)
-                            iframe_element = driver.find_element(by, value)
-                            logging.info(f"[SMART_FIND] Found inside iframe {index+1}: {value}")
-                            return iframe_element
-                        except Exception:
-                            driver.switch_to.default_content()
-                            continue
-                    driver.switch_to.default_content()
-                except Exception:
-                    pass
-
+                if self._find_in_shadow_dom(driver, by, value, attempt):
+                    return self._find_in_shadow_dom(driver, by, value, attempt)
+                if self._find_in_iframes(driver, by, value, attempt):
+                    return self._find_in_iframes(driver, by, value, attempt)
                 time.sleep(wait_between)
 
-        raise Exception(f"❌ smart_find_element() failed after {retries} retries for {value}")
+        raise NoSuchElementException(f"❌ smart_find_element() failed after {retries} retries for {value}")
+
+    def _find_normally(self, driver, by, value, attempt):
+        element = driver.find_element(by, value)
+        logging.info(f"[SMART_FIND] Found normally on attempt {attempt+1}: {value}")
+        return element
+
+    def _find_in_shadow_dom(self, driver, by, value, attempt):
+        try:
+            all_elements = driver.execute_script('return document.querySelectorAll("*")')
+            for root in all_elements:
+                shadow_root = driver.execute_script('return arguments[0].shadowRoot', root)
+                if shadow_root:
+                    found = shadow_root.find_element(by, value)
+                    if found:
+                        logging.info(f"[SMART_FIND] Found inside Shadow DOM on attempt {attempt+1}: {value}")
+                        return found
+        except Exception:
+            pass
+        return None
+
+    def _find_in_iframes(self, driver, by, value, attempt):
+        try:
+            iframes = driver.find_elements(By.TAG_NAME, "iframe")
+            for index, iframe in enumerate(iframes):
+                try:
+                    driver.switch_to.frame(iframe)
+                    iframe_element = driver.find_element(by, value)
+                    logging.info(f"[SMART_FIND] Found inside iframe {index+1}: {value}")
+                    return iframe_element
+                except Exception:
+                    driver.switch_to.default_content()
+                    continue
+            driver.switch_to.default_content()
+        except Exception:
+            pass
+        return None

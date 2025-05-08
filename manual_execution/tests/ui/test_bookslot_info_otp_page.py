@@ -1,84 +1,57 @@
-import pathlib
-import logging
 import sys, os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..")))
+
+import pathlib
+import time
+import logging
+import sys
+import os
 import selenium.webdriver.support.expected_conditions as EC
 import allure
-
-# Ensure project root is added dynamically regardless of depth
-current_file = pathlib.Path(__file__)
-project_root = os.path.abspath(os.path.join(current_file, *[".."] * 4))
-sys.path.append(os.path.join(project_root))  # Add root to path
-print(f"Project root: {project_root}")
-
-
-
-# Import BookslotInfoOtpPage
-sys.path.append(os.path.join(project_root, "manual_execution", "pages"))
-sys.path.append(os.path.join(project_root, "selenium_utils"))
-from imports_manager import get_imports,imports
-imports = get_imports()
-
-run_chrome_automation = imports["run_chrome_automation"]
-try:
-    from manual_execution.pages.bookslot_info_otp_page import BookslotInfoOtpPage
-except ModuleNotFoundError as e:
-    logging.error(f"Module not found: {e}")
-    raise
-
-if project_root not in sys.path:
-    sys.path.insert(0, project_root)
-print(f"sys.path: {sys.path}")
-print("Current sys.path:", sys.path)
-
-#-------------------------------------------------------------------------------------------------
-# Assign dynamic imports to local variables
-run_chrome_automation = imports['run_chrome_automation']
-if run_chrome_automation is None:
-    raise ImportError("❌ run_chrome_automation was not imported. Check dynamic import path.")
-ElementFinder = imports['ElementFinder']
-simulate_typing = imports['simulate_typing']
-human_scroll = imports['human_scroll']
-random_mouse_movement = imports['random_mouse_movement']
-simulate_human_behavior = imports['simulate_human_behavior']
-WebDriverWait = imports['WebDriverWait']
-By = imports['By']
-Keys = imports['Keys']
-TimeoutException = imports['TimeoutException']
-NoSuchElementException = imports['NoSuchElementException']
-WebDriverWait = imports['WebDriverWait']
-faker_bookslot_payload = imports["generate_bookslot_payload"]
-
-print(f"run_chrome_automation: {run_chrome_automation}")
-
-from dotenv import load_dotenv
-load_dotenv()
-# ------------------------------------------------------------------------------------------------------------
-# Generate test data
+from auto_importer import smart_import
+# Dynamically import the imports dictionary from imports_manager
+get_imports = smart_import("imports_manager.get_imports")
+imports = get_imports() if get_imports else {}
+# Pull specific objects dynamically
+run_chrome_automation = imports.get("run_chrome_automation")
+ElementFinder = imports.get("ElementFinder")
+simulate_typing = imports.get("simulate_typing")
+human_scroll = imports.get("human_scroll")
+random_mouse_movement = imports.get("random_mouse_movement")
+simulate_human_behavior = imports.get("simulate_human_behavior")
+WebDriverWait = imports.get("WebDriverWait")
+By = imports.get("By")
+Keys = imports.get("Keys")
+TimeoutException = imports.get("TimeoutException")
+NoSuchElementException = imports.get("NoSuchElementException")
+faker_bookslot_payload = imports.get("generate_bookslot_payload")
+if not run_chrome_automation:
+    raise ImportError("❌ run_chrome_automation was not imported.")
+# Load environment variables
+smart_import("dotenv.load_dotenv")()
+# Attach generated test data to Allure
 test_data = faker_bookslot_payload()
-# Allure: attach input data
 allure.attach(str(test_data), name="Input Payload", attachment_type=allure.attachment_type.JSON)
-# Set up browser once
+# Start browser and form logic
 target = os.getenv("TARGET_URL")
 driver = run_chrome_automation(target)
 finder = ElementFinder(driver)
-# simulate human-like behavior
+BookslotInfoOtpPage = smart_import("manual_execution.pages.bookslot_info_otp_page.BookslotInfoOtpPage")
+@allure.title(" Book Slot Information OTP Page Flow")
+def book_slot():
+    form = BookslotInfoOtpPage(driver, simulate_human_behavior)
+    form.enter_first_name(test_data["first_name"])
+    form.enter_last_name(test_data["last_name"])
+    form.enter_email(test_data["email"])
+    form.enter_phone_number(test_data["phone_number"])
+    form.enter_zip(test_data["zip"])
+    form.select_contact_method(test_data["contact_method"])
+    form.click_send_code()
+    form.enter_code(test_data["verification_code"])
+    form.verify_code()
+    logging.info("✅ Step 1: Book Slot completed.")
+    time.sleep(100)
 try:
-    # Step 1: Book Slot Page
-    @allure.title("Full End-to-End Booking Flow")
-    def book_slot():
-        #form = BookslotInfoOtpPage(driver)
-        form = BookslotInfoOtpPage(driver, simulate_human_behavior)  # Updated to include simulate_human_behavior
-        form.enter_first_name(test_data["first_name"])
-        form.enter_last_name(test_data["last_name"])
-        form.enter_email(test_data["email"])
-        form.enter_phone_number(test_data["phone_number"])
-        form.enter_zip(test_data["zip"])
-        form.select_contact_method(test_data["contact_method"])
-        form.click_send_code()
-        form.enter_code(test_data["verification_code"])
-        form.verify_code()
-        logging.info("✅ Step 1: Book Slot completed.")
-    
     book_slot()
 except TimeoutException as te:
     logging.error(f"⏱️ Timeout while waiting for an element: {te}")
