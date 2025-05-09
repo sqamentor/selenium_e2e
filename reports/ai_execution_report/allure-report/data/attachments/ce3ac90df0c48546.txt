@@ -1,0 +1,261 @@
+[33mWARNING [0m root:schedular_page.py:133 ⚠️ Could not click Request Call Back: Message: element click intercepted: Element <button _ngcontent-ng-c1730272325="" type="button" pbutton="" id="request" class="p-element p-2 btn-cursor btn blue-gradient-button btn-secondary rounded-0 reqcallbtn p-button p-component" style="border: 3px solid red;">...</button> is not clickable at point (1829, 810). Other element would receive the click: <div _ngcontent-ng-c1454010155="" id="preloader">...</div>
+  (Session info: chrome=135.0.7049.96)
+Stacktrace:
+	GetHandleVerifier [0x00FC80E3+60707]
+	GetHandleVerifier [0x00FC8124+60772]
+	(No symbol) [0x00DF0683]
+	(No symbol) [0x00E3E940]
+	(No symbol) [0x00E3CCE4]
+	(No symbol) [0x00E3A887]
+	(No symbol) [0x00E39B8B]
+	(No symbol) [0x00E2E215]
+	(No symbol) [0x00E5D04C]
+	(No symbol) [0x00E2DCA4]
+	(No symbol) [0x00E5D2C4]
+	(No symbol) [0x00E7E824]
+	(No symbol) [0x00E5CE46]
+	(No symbol) [0x00E2C5D3]
+	(No symbol) [0x00E2D424]
+	GetHandleVerifier [0x0120BBC3+2435075]
+	GetHandleVerifier [0x01207163+2416035]
+	GetHandleVerifier [0x0122350C+2531660]
+	GetHandleVerifier [0x00FDF1B5+155125]
+	GetHandleVerifier [0x00FE5B5D+182173]
+	GetHandleVerifier [0x00FCF9B8+91640]
+	GetHandleVerifier [0x00FCFB60+92064]
+	GetHandleVerifier [0x00FBA620+4704]
+	BaseThreadInitThunk [0x75EA5D49+25]
+	RtlInitializeExceptionChain [0x76FACFFB+107]
+	RtlGetAppContainerNamedObjectPath [0x76FACF81+561]
+
+[31m[1mERROR   [0m root:schedular_page.py:67 ❌ Error setting date range: Message: element click intercepted: Element <input type="text" role="combobox" aria-autocomplete="none" aria-haspopup="dialog" autocomplete="off" pautofocus="" class="p-element ng-tns-c1685646730-4 p-inputtext p-component ng-star-inserted" placeholder="" aria-expanded="false" style="border: 3px solid red;"> is not clickable at point (305, 318). Other element would receive the click: <div _ngcontent-ng-c1454010155="" id="preloader">...</div>
+  (Session info: chrome=135.0.7049.96)
+Stacktrace:
+	GetHandleVerifier [0x00FC80E3+60707]
+	GetHandleVerifier [0x00FC8124+60772]
+	(No symbol) [0x00DF0683]
+	(No symbol) [0x00E3E940]
+	(No symbol) [0x00E3CCE4]
+	(No symbol) [0x00E3A887]
+	(No symbol) [0x00E39B8B]
+	(No symbol) [0x00E2E215]
+	(No symbol) [0x00E5D04C]
+	(No symbol) [0x00E2DCA4]
+	(No symbol) [0x00E5D2C4]
+	(No symbol) [0x00E7E824]
+	(No symbol) [0x00E5CE46]
+	(No symbol) [0x00E2C5D3]
+	(No symbol) [0x00E2D424]
+	GetHandleVerifier [0x0120BBC3+2435075]
+	GetHandleVerifier [0x01207163+2416035]
+	GetHandleVerifier [0x0122350C+2531660]
+	GetHandleVerifier [0x00FDF1B5+155125]
+	GetHandleVerifier [0x00FE5B5D+182173]
+	GetHandleVerifier [0x00FCF9B8+91640]
+	GetHandleVerifier [0x00FCFB60+92064]
+	GetHandleVerifier [0x00FBA620+4704]
+	BaseThreadInitThunk [0x75EA5D49+25]
+	RtlInitializeExceptionChain [0x76FACFFB+107]
+	RtlGetAppContainerNamedObjectPath [0x76FACF81+561]
+
+[31m[1mERROR   [0m root:PatientInformationPage.py:122 💥 Unexpected error during Patient Info submission step.
+Traceback (most recent call last):
+  File "C:\Users\LokendraSingh\AutomationUtilities\pages\PatientInformationPage.py", line 78, in submit_and_verify_next_step
+    next_btn = self.driver.find_element(By.XPATH, "//button[contains(text(),'Next')]")
+  File "C:\Users\LokendraSingh\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 898, in find_element
+    return self.execute(Command.FIND_ELEMENT, {"using": by, "value": value})["value"]
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LokendraSingh\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\LokendraSingh\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"xpath","selector":"//button[contains(text(),'Next')]"}
+  (Session info: chrome=135.0.7049.96); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#no-such-element-exception
+Stacktrace:
+	GetHandleVerifier [0x00FC80E3+60707]
+	GetHandleVerifier [0x00FC8124+60772]
+	(No symbol) [0x00DF0683]
+	(No symbol) [0x00E38660]
+	(No symbol) [0x00E389FB]
+	(No symbol) [0x00E81022]
+	(No symbol) [0x00E5D094]
+	(No symbol) [0x00E7E824]
+	(No symbol) [0x00E5CE46]
+	(No symbol) [0x00E2C5D3]
+	(No symbol) [0x00E2D424]
+	GetHandleVerifier [0x0120BBC3+2435075]
+	GetHandleVerifier [0x01207163+2416035]
+	GetHandleVerifier [0x0122350C+2531660]
+	GetHandleVerifier [0x00FDF1B5+155125]
+	GetHandleVerifier [0x00FE5B5D+182173]
+	GetHandleVerifier [0x00FCF9B8+91640]
+	GetHandleVerifier [0x00FCFB60+92064]
+	GetHandleVerifier [0x00FBA620+4704]
+	BaseThreadInitThunk [0x75EA5D49+25]
+	RtlInitializeExceptionChain [0x76FACFFB+107]
+	RtlGetAppContainerNamedObjectPath [0x76FACF81+561]
+
+[31m[1mERROR   [0m root:test_run_full.py:116 🚫 Stopping execution due to Patient Info failure.
+[31m[1mERROR   [0m root:test_run_full.py:147 💥 Unexpected error during test run: Message: invalid session id
+Stacktrace:
+	GetHandleVerifier [0x00FC80E3+60707]
+	GetHandleVerifier [0x00FC8124+60772]
+	(No symbol) [0x00DF04FE]
+	(No symbol) [0x00E2B898]
+	(No symbol) [0x00E5CF06]
+	(No symbol) [0x00E589D5]
+	(No symbol) [0x00E57F66]
+	(No symbol) [0x00DC36E5]
+	(No symbol) [0x00DC3C3E]
+	(No symbol) [0x00DC40CD]
+	GetHandleVerifier [0x0120BBC3+2435075]
+	GetHandleVerifier [0x01207163+2416035]
+	GetHandleVerifier [0x0122350C+2531660]
+	GetHandleVerifier [0x00FDF1B5+155125]
+	GetHandleVerifier [0x00FE5B5D+182173]
+	(No symbol) [0x00DC33B0]
+	(No symbol) [0x00DC2BC3]
+	GetHandleVerifier [0x0132D2AC+3620588]
+	BaseThreadInitThunk [0x75EA5D49+25]
+	RtlInitializeExceptionChain [0x76FACFFB+107]
+	RtlGetAppContainerNamedObjectPath [0x76FACF81+561]
+Traceback (most recent call last):
+  File "C:\Users\LokendraSingh\AutomationUtilities\pages\PatientReferral.py", line 16, in wait_for_referral_page
+    self.wait.until(EC.invisibility_of_element_located((By.ID, "preloader")))
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LokendraSingh\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\support\wait.py", line 137, in until
+    value = method(self._driver)
+  File "C:\Users\LokendraSingh\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\support\expected_conditions.py", line 565, in _predicate
+    target = driver.find_element(*target)
+  File "C:\Users\LokendraSingh\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 898, in find_element
+    return self.execute(Command.FIND_ELEMENT, {"using": by, "value": value})["value"]
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LokendraSingh\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\LokendraSingh\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id
+Stacktrace:
+	GetHandleVerifier [0x00FC80E3+60707]
+	GetHandleVerifier [0x00FC8124+60772]
+	(No symbol) [0x00DF04FE]
+	(No symbol) [0x00E2B898]
+	(No symbol) [0x00E5CF06]
+	(No symbol) [0x00E589D5]
+	(No symbol) [0x00E57F66]
+	(No symbol) [0x00DC36E5]
+	(No symbol) [0x00DC3C3E]
+	(No symbol) [0x00DC40CD]
+	GetHandleVerifier [0x0120BBC3+2435075]
+	GetHandleVerifier [0x01207163+2416035]
+	GetHandleVerifier [0x0122350C+2531660]
+	GetHandleVerifier [0x00FDF1B5+155125]
+	GetHandleVerifier [0x00FE5B5D+182173]
+	(No symbol) [0x00DC33B0]
+	(No symbol) [0x00DC2BC3]
+	GetHandleVerifier [0x0132D2AC+3620588]
+	BaseThreadInitThunk [0x75EA5D49+25]
+	RtlInitializeExceptionChain [0x76FACFFB+107]
+	RtlGetAppContainerNamedObjectPath [0x76FACF81+561]
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\LokendraSingh\AutomationUtilities\pages\PatientReferral.py", line 28, in select_referral_option
+    self.wait_for_referral_page()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\LokendraSingh\AutomationUtilities\pages\PatientReferral.py", line 22, in wait_for_referral_page
+    self.driver.save_screenshot("screenshots/error_wait_referral_page.png")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LokendraSingh\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 994, in save_screenshot
+    return self.get_screenshot_as_file(filename)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\LokendraSingh\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 969, in get_screenshot_as_file
+    png = self.get_screenshot_as_png()
+  File "C:\Users\LokendraSingh\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 1003, in get_screenshot_as_png
+    return b64decode(self.get_screenshot_as_base64().encode("ascii"))
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\LokendraSingh\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 1013, in get_screenshot_as_base64
+    return self.execute(Command.SCREENSHOT)["value"]
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LokendraSingh\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\LokendraSingh\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id
+Stacktrace:
+	GetHandleVerifier [0x00FC80E3+60707]
+	GetHandleVerifier [0x00FC8124+60772]
+	(No symbol) [0x00DF04FE]
+	(No symbol) [0x00E2B898]
+	(No symbol) [0x00E5CF06]
+	(No symbol) [0x00E589D5]
+	(No symbol) [0x00E57F66]
+	(No symbol) [0x00DC36E5]
+	(No symbol) [0x00DC3C3E]
+	(No symbol) [0x00DC40CD]
+	GetHandleVerifier [0x0120BBC3+2435075]
+	GetHandleVerifier [0x01207163+2416035]
+	GetHandleVerifier [0x0122350C+2531660]
+	GetHandleVerifier [0x00FDF1B5+155125]
+	GetHandleVerifier [0x00FE5B5D+182173]
+	(No symbol) [0x00DC33B0]
+	(No symbol) [0x00DC2BC3]
+	GetHandleVerifier [0x0132D2AC+3620588]
+	BaseThreadInitThunk [0x75EA5D49+25]
+	RtlInitializeExceptionChain [0x76FACFFB+107]
+	RtlGetAppContainerNamedObjectPath [0x76FACF81+561]
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\LokendraSingh\AutomationUtilities\tests\ui\test_run_full.py", line 129, in test_run_full
+    referral_page.select_referral_option("Internet search")  # or random
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LokendraSingh\AutomationUtilities\pages\PatientReferral.py", line 39, in select_referral_option
+    self.driver.save_screenshot("screenshots/error_select_referral_option.png")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LokendraSingh\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 994, in save_screenshot
+    return self.get_screenshot_as_file(filename)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\LokendraSingh\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 969, in get_screenshot_as_file
+    png = self.get_screenshot_as_png()
+  File "C:\Users\LokendraSingh\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 1003, in get_screenshot_as_png
+    return b64decode(self.get_screenshot_as_base64().encode("ascii"))
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\LokendraSingh\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 1013, in get_screenshot_as_base64
+    return self.execute(Command.SCREENSHOT)["value"]
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LokendraSingh\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\LokendraSingh\AppData\Local\Programs\Python\Python313\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id
+Stacktrace:
+	GetHandleVerifier [0x00FC80E3+60707]
+	GetHandleVerifier [0x00FC8124+60772]
+	(No symbol) [0x00DF04FE]
+	(No symbol) [0x00E2B898]
+	(No symbol) [0x00E5CF06]
+	(No symbol) [0x00E589D5]
+	(No symbol) [0x00E57F66]
+	(No symbol) [0x00DC36E5]
+	(No symbol) [0x00DC3C3E]
+	(No symbol) [0x00DC40CD]
+	GetHandleVerifier [0x0120BBC3+2435075]
+	GetHandleVerifier [0x01207163+2416035]
+	GetHandleVerifier [0x0122350C+2531660]
+	GetHandleVerifier [0x00FDF1B5+155125]
+	GetHandleVerifier [0x00FE5B5D+182173]
+	(No symbol) [0x00DC33B0]
+	(No symbol) [0x00DC2BC3]
+	GetHandleVerifier [0x0132D2AC+3620588]
+	BaseThreadInitThunk [0x75EA5D49+25]
+	RtlInitializeExceptionChain [0x76FACFFB+107]
+	RtlGetAppContainerNamedObjectPath [0x76FACF81+561]

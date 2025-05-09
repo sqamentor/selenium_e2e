@@ -1,0 +1,31 @@
+[33mWARNING [0m root:schedular_page.py:133 ⚠️ Could not click Request Call Back: Message: element click intercepted: Element <button _ngcontent-ng-c1730272325="" type="button" pbutton="" id="request" class="p-element p-2 btn-cursor btn blue-gradient-button btn-secondary rounded-0 reqcallbtn p-button p-component" style="border: 3px solid red;">...</button> is not clickable at point (1829, 810). Other element would receive the click: <div _ngcontent-ng-c1454010155="" id="preloader">...</div>
+  (Session info: chrome=135.0.7049.96)
+Stacktrace:
+	GetHandleVerifier [0x012380E3+60707]
+	GetHandleVerifier [0x01238124+60772]
+	(No symbol) [0x01060683]
+	(No symbol) [0x010AE940]
+	(No symbol) [0x010ACCE4]
+	(No symbol) [0x010AA887]
+	(No symbol) [0x010A9B8B]
+	(No symbol) [0x0109E215]
+	(No symbol) [0x010CD04C]
+	(No symbol) [0x0109DCA4]
+	(No symbol) [0x010CD2C4]
+	(No symbol) [0x010EE824]
+	(No symbol) [0x010CCE46]
+	(No symbol) [0x0109C5D3]
+	(No symbol) [0x0109D424]
+	GetHandleVerifier [0x0147BBC3+2435075]
+	GetHandleVerifier [0x01477163+2416035]
+	GetHandleVerifier [0x0149350C+2531660]
+	GetHandleVerifier [0x0124F1B5+155125]
+	GetHandleVerifier [0x01255B5D+182173]
+	GetHandleVerifier [0x0123F9B8+91640]
+	GetHandleVerifier [0x0123FB60+92064]
+	GetHandleVerifier [0x0122A620+4704]
+	BaseThreadInitThunk [0x75EA5D49+25]
+	RtlInitializeExceptionChain [0x76FACFFB+107]
+	RtlGetAppContainerNamedObjectPath [0x76FACF81+561]
+
+[33mWARNING [0m root:schedular_page.py:64 ⚠️ Past dates might be selectable — review calendar settings.
