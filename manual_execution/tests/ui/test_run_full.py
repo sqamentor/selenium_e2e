@@ -22,6 +22,8 @@ simulate_typing = imports.get("simulate_typing")
 human_scroll = imports.get("human_scroll")
 random_mouse_movement = imports.get("random_mouse_movement")
 simulate_human_behavior = imports.get("simulate_human_behavior")
+human_type = imports.get("human_type")
+human_click = imports.get("human_click")
 WebDriverWait = imports.get("WebDriverWait")
 By = imports.get("By")
 RequestAppointmentPage = imports.get("RequestAppointmentPage")
@@ -56,19 +58,24 @@ BookslotInfoOtpPage = smart_import("manual_execution.pages.bookslot_info_otp_pag
 
 
 @pytest.mark.allure_label("Test")
-#@allure.severity(allure.severity_level.CRITICAL)  # ✅ fully supported decorator
 @allure.title("Full End-to-End Booking Flow")
 def test_run_full():
     try:
         # Step 1: Book Slot Page
         form = BookslotInfoOtpPage(driver, simulate_human_behavior)
+
+        # Call methods directly with required arguments
         form.enter_first_name(test_data["first_name"])
         form.enter_last_name(test_data["last_name"])
         form.enter_email(test_data["email"])
         form.enter_phone_number(test_data["phone_number"])
         form.enter_zip(test_data["zip"])
+
+        # Simulate human-like click for contact method and send code
         form.select_contact_method(test_data["contact_method"])
         form.click_send_code()
+
+        # Simulate human-like typing for verification code
         form.enter_code(test_data["verification_code"])
         form.verify_code()
         logging.info("✅ Step 1: Book Slot completed.")
@@ -76,35 +83,32 @@ def test_run_full():
         # Step 2: Event Selection Page
         event = EventSelectionPage(driver)
         event.wait_for_loader()
-        #event.click_request_call_back()
-        event.click_new_patient_appointment()
-        #event.click_complimentary_consultation()
+        human_click(driver, event.click_new_patient_appointment_button())
         logging.info("✅ Step 2: Event selection completed.")
 
+        # Step 3: Scheduler Page
         scheduler = WebSchedulerPage(driver)
         scheduler.wait_for_scheduler_heading()
-        scheduler.click_request_call_back()
+        human_click(driver, scheduler.click_request_call_back_button())
         scheduler.validate_no_past_dates_clickable()
-        scheduler.enter_date_range(2, 90)  # Selects today+3 to today+30
+        scheduler.enter_date_range(2, 90)  # Selects today+2 to today+90
         scheduler.enter_zip_distance(test_data["zip"], test_data["zip_distance"])
-        #scheduler.select_last_date()
-        scheduler.click_first_available_slot()
+        human_click(driver, scheduler.click_first_available_slot_button())
         logging.info("✅ Step 3: Scheduler slot selection done.")
 
-        # Step 3: Request Appointment Page
-        scheduler = RequestAppointmentPage(driver, finder)
-        #scheduler.click_request_call_back()
-        scheduler.wait_for_page_to_load()
-        scheduler.wait_for_session_timer()
-        scheduler.validate_appointment_summary()
-        scheduler.click_next_button()
+        # Step 4: Request Appointment Page
+        request_appointment = RequestAppointmentPage(driver, finder)
+        request_appointment.wait_for_page_to_load()
+        request_appointment.wait_for_session_timer()
+        request_appointment.validate_appointment_summary()
+        human_click(driver, request_appointment.click_next_button())
         logging.info("✅ Step 4: Request Appointment validated and submitted.")
 
-        # Step 4: Patient Info
+        # Step 5: Patient Info Page
         patient_info_page = PatientInformationPage(driver, finder)
         patient_info_page.wait_for_patient_info_form()
-        patient_info_page.fill_mandatory_fields(test_data["dob"])
-        patient_info_page.click_next_button()
+        human_type(patient_info_page.enter_dob_field(), test_data["dob"])
+        human_click(driver, patient_info_page.click_next_button())
         try:
             result_url = patient_info_page.submit_and_verify_next_step()
 
@@ -113,32 +117,24 @@ def test_run_full():
                 logging.info("🛑 Existing patient detected. Ending flow.")
                 print(f"➡️ Redirected to: {result_url}")
                 driver.save_screenshot("screenshots/existing_patient_detected.png")
-                exit(0)
+                return
 
         except Exception as e:
             logging.error("🚫 Stopping execution due to Patient Info failure.")
-            #exit(1)
-
-        # Step 5: Existing Patient Check
-        patient_exist_page = PatientExistantPage(driver)
-        if patient_exist_page.is_displayed():
-            patient_exist_page.handle_existing_patient_page()
-            logging.warning("🛑 Existing patient detected. Booking flow stopped.")
-            print(f"➡️ Redirected to: {driver.current_url}")
-            exit(1)
+            raise
 
         # Step 6: Referral Page
         referral_page = PatientReferral(driver, finder)
         referral_page.select_referral_option("Internet search")  # or random
-        referral_page.click_next_button()
+        human_click(driver, referral_page.click_next_button())
         logging.info("✅ Step 6: Referral page submitted.")
 
         # Step 7: Insurance Page
-        insurance_page = InsurancePage(driver, finder,test_data=test_data)
+        insurance_page = InsurancePage(driver, finder, test_data=test_data)
         try:
             insurance_page.fill_insurance_form()
-            insurance_page.click_send_to_clinic()
-            logging.info("✅ Step 6: Insurance form submitted.")
+            human_click(driver, insurance_page.click_send_to_clinic_button())
+            logging.info("✅ Step 7: Insurance form submitted.")
         except Exception as e:
             logging.error("💥 Unexpected error during Insurance submission step.")
             raise
@@ -150,8 +146,10 @@ def test_run_full():
         logging.exception(f"💥 Unexpected error during test run: {e}")
         driver.save_screenshot("screenshots/unexpected_error.png")
     finally:
-        time.sleep(10)
+        # Simulate idle before closing
+        time.sleep(5)  # Simulate idle time before closing
         driver.quit()
+
 # ------------------------- Standalone Execution -------------------------
 if __name__ == "__main__":
     test_run_full()

@@ -25,9 +25,12 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException,TimeoutException
+from selenium.webdriver.common.action_chains import ActionChains
+import random
 from dotenv import load_dotenv
 import re
 import pathlib
+import random
 from selenium_utils.browser_utils.browser_ai_utils import (
     explain_error_with_ai,
     summarize_logs_with_ai,
@@ -35,6 +38,7 @@ from selenium_utils.browser_utils.browser_ai_utils import (
     verify_page_with_ai
 )
 from dotenv import load_dotenv
+
 # ------------------------- Setup Logging -------------------------
 # ✅ Step 1: Define the directory and log file path
 BASE_DIR = pathlib.Path(__file__).parent.resolve()
@@ -180,8 +184,6 @@ def extract_zip(zip_path, extract_to):
 
 def kill_existing_chrome_instances():
     try:
-        subprocess.run(f"taskkill /f /im {CHROMEDRIVER_EXECUTABLE}", check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        subprocess.run(f"taskkill /f /im {CHROMEDRIVER_EXECUTABLE}", check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         subprocess.run(f"taskkill /f /im {CHROMEDRIVER_FILENAME}", check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         logging.info("[OK] Chrome/Chromedriver processes terminated.")
     except Exception as e:
@@ -243,7 +245,6 @@ def setup_chrome_options(headless=False):
     options = Options()
     options.add_argument("--disable-notifications")
     options.add_argument("--disable-infobars")
-    options.add_experimental_option("excludeSwitches", ["enable-automation"])
     options.add_experimental_option("useAutomationExtension", False)
     options.add_argument("--disable-blink-features=AutomationControlled")
     options.add_argument("--lang=en-US")
@@ -255,9 +256,14 @@ def setup_chrome_options(headless=False):
     options.add_argument("--no-default-browser-check")
     options.add_argument("--disable-default-apps")
     options.add_argument("--no-first-run")
+    options.add_argument("--disable-blink-features=AutomationControlled")
+    options.add_argument("--start-maximized")
+    options.add_experimental_option("excludeSwitches", ["enable-automation"])
+    options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36")
 
     # Use a unique temporary directory for user data
     temp_user_data_dir = tempfile.mkdtemp()
+    #temp_user_data_dir = os.path.expandvars(r"%LOCALAPPDATA%\Google\Chrome\User Data")
     options.add_argument(f"--user-data-dir={temp_user_data_dir}")
 
     if headless:
@@ -306,6 +312,7 @@ def run_chrome_automation(target_url):
         temp_profile = prepare_temp_profile()
         options = setup_chrome_options(HEADLESS)
         driver = launch_chrome_driver(options, target_url)
+        time.sleep(random.uniform(2, 4))
         if not driver:
             raise RuntimeError("❌ WebDriver initialization failed.")
         handle_page_load(driver, target_url)
@@ -336,7 +343,6 @@ def download_chromedriver_if_needed(chrome_version):
         extract_zip(zip_path, DRIVERS_DIR)
     os.environ['PATH'] += os.pathsep + DRIVERS_DIR
 
-
 def prepare_temp_profile():
     temp_profile = create_temp_profile()
     clean_session_files(temp_profile)
@@ -346,6 +352,15 @@ def prepare_temp_profile():
 def launch_chrome_driver(options, target_url):
     logging.info("[OK] Launching Chrome browser with WebDriver...")
     driver = webdriver.Chrome(service=Service(), options=options)
+    # 🧙‍♂️ Hide webdriver flag from navigator
+    driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
+        "source": """
+            Object.defineProperty(navigator, 'webdriver', {
+                get: () => undefined
+            })
+        """
+    })
+    
     driver.maximize_window()
     driver.get(target_url)
     return driver
